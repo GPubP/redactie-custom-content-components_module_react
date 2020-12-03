@@ -43,7 +43,7 @@ Core.routes.register({
 			path: MODULE_PATHS.overview,
 			component: CustomCCOverview,
 			navigation: {
-				label: 'Content types',
+				label: 'Custom content componenten',
 				order: 0,
 				parentPath: MODULE_PATHS.root,
 			},
