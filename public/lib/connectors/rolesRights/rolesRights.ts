@@ -3,10 +3,6 @@ import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
 
 class RolesRightsConnector {
 	public apiName = 'roles-rights-module';
-	public securityRights = {
-		read: 'content_read',
-		create: 'content_create',
-	};
 	public api: RolesRightsModuleAPI;
 
 	constructor() {
