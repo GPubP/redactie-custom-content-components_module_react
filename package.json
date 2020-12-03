@@ -5,7 +5,7 @@
   "main": "dist/redactie-custom-content-components-module.umd.js",
   "module": "dist/redactie-custom-content-components-module.umd.js",
   "jsnext:main": "dist/redactie-custom-content-components-module.umd.js",
-  "types": "dist/public/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "public"
