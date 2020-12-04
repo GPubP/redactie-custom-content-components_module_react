@@ -10,7 +10,7 @@ const usePresetsUIStates: UsePresetsUIStates = (presetId = '') => {
 		isCreating: false,
 		error: null,
 	});
-	const presetDetailUIState = useObservable(presetsFacade.selectDetailUIState(presetId), {
+	const presetDetailUIState = useObservable(presetsFacade.selectPresetUIState(presetId), {
 		isDeleting: false,
 		isFetching: false,
 		isUpdating: false,

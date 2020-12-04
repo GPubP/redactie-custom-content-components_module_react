@@ -52,7 +52,7 @@ export class PresetsFacade {
 		PresetDetailUIModel
 	>() as Observable<PresetDetailUIModel>;
 
-	public selectDetailUIState(presetId: string): Observable<PresetDetailUIModel> {
+	public selectPresetUIState(presetId: string): Observable<PresetDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(presetId);
 	}
 
