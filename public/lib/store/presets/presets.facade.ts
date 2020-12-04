@@ -34,7 +34,7 @@ export class PresetsFacade {
 	) {}
 
 	// LIST STATES
-	public readonly error$ = this.listQuery.error$;
+	public readonly listError$ = this.listQuery.error$;
 	public readonly isFetching$ = this.listQuery.isFetching$;
 	public setIsFetching(isFetching = false): void {
 		this.listStore.setIsFetching(isFetching);

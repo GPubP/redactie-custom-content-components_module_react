@@ -17,7 +17,7 @@ const usePresetsPagination: UsePresetsPagination = (searchParams, clearCache = f
 	const [pagination, setPagination] = useState<PaginationResponse<PresetListModel> | null>(null);
 	const prevSearchParams = usePrevious<SearchParams>(searchParams);
 	const loading = useObservable(presetsFacade.isFetching$, false);
-	const error = useObservable(presetsFacade.error$, null);
+	const error = useObservable(presetsFacade.listError$, null);
 
 	useEffect(() => {
 		const s = combineLatest([paginator.pageChanges, searchParamsObservable])
