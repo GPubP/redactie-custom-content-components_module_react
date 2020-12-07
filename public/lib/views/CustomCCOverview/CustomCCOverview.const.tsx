@@ -5,6 +5,7 @@ import React from 'react';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
+import { TableColumn } from '../../customCC.types';
 
 import { OverviewTableRow } from './CustomCCOverview.types';
 
@@ -24,7 +25,7 @@ export const DEFAULT_FILTER_FORM: FilterFormState = {
 	status: '',
 };
 
-export const OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
+export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'name',
