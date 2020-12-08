@@ -16,7 +16,7 @@ import {
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
@@ -35,28 +35,16 @@ const CustomCCOverview: FC = () => {
 	/**
 	 * Hooks
 	 */
+	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS, false);
 
-	const [activeSorting, setActiveSorting] = useState<OrderBy>();
-	const [activeFilters, setActiveFilters] = useState<FilterItem[]>([]);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(DEFAULT_FILTER_FORM);
 	const [initialLoading, setInitialLoading] = useState(true);
 
-	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS, false);
 	const [t] = useCoreTranslation();
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[]);
 	const { loading, pagination } = usePresetsPagination(query);
-
-	const createFilters = useCallback((values: FilterFormState) => {
-		return [
-			{
-				key: 'search',
-				valuePrefix: 'Zoekterm',
-				value: values.name,
-			},
-		].filter(f => !!f.value);
-	}, []);
 
 	// Set initial loading
 	useEffect(() => {
@@ -68,13 +56,7 @@ const CustomCCOverview: FC = () => {
 	// Set initial values with query params
 	useEffect(() => {
 		if (query.search) {
-			const initialFilterState = { ...filterFormState, name: query.search };
-			setFilterFormState(initialFilterState);
-			setActiveFilters(createFilters(initialFilterState));
-		}
-		if (query.sort) {
-			const { key, order } = parseStringToOrderBy(query.sort);
-			setActiveSorting({ order, key: `data.${key}` });
+			setFilterFormState({ ...filterFormState, name: query.search });
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -82,24 +64,27 @@ const CustomCCOverview: FC = () => {
 	 * Methods
 	 */
 
+	const createFilters = (values: FilterFormState): FilterItem[] => {
+		return [
+			{
+				key: 'search',
+				valuePrefix: 'Zoekterm',
+				value: values.name,
+			},
+		].filter(f => !!f.value);
+	};
+
 	const clearAllFilters = (): void => {
-		// Reset filters, query params and filter form
-		setActiveFilters([]);
 		setQuery({ search: '' });
 		setFilterFormState(DEFAULT_FILTER_FORM);
 	};
 
 	const clearFilter = (item: FilterItem): void => {
-		console.log(item);
-
-		// Delete item from filters
-		const updatedFilters = activeFilters.filter(el => el.value !== item.value);
-		setActiveFilters(updatedFilters);
-		// Update searchParams
+		const filterKey = item.key === 'search' ? 'name' : item.key;
 		setQuery({ [item.key]: '' });
 		setFilterFormState({
 			...filterFormState,
-			[item.key]: '',
+			[filterKey]: '',
 		});
 	};
 
@@ -110,19 +95,18 @@ const CustomCCOverview: FC = () => {
 		});
 	};
 
-	const onOrderBy = (orderBy: OrderBy): void => {
-		setQuery({ sort: parseOrderByToString(orderBy) });
-		const { key, order } = parseStringToOrderBy(query.sort);
-		setActiveSorting({ order, key: `data.${key}` });
+	const onOrderBy = ({ key, order }: OrderBy): void => {
+		const prefixedOrderBy = { order, key: `data.${key}` };
+		setQuery({ sort: parseOrderByToString(prefixedOrderBy) });
 	};
 
 	const onApplyFilters = (values: FilterFormState): void => {
-		// Update filters
 		setFilterFormState(values);
-		setActiveFilters(createFilters(values));
-		// Update query
 		setQuery({ search: values.name });
 	};
+
+	const activeSorting = parseStringToOrderBy(query.sort);
+	const activeFilters = createFilters(filterFormState);
 
 	/**
 	 * Render

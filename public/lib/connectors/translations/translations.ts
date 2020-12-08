@@ -1,4 +1,4 @@
-import Core, { ModuleAPI } from '@redactie/redactie-core';
+import Core from '@redactie/redactie-core';
 import { TranslationsAPI } from '@redactie/translations-module';
 
 const translationsAPI = Core.modules.getModuleAPI<TranslationsAPI>('translations-module');

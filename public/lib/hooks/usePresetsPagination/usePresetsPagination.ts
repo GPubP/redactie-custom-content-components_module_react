@@ -12,7 +12,6 @@ import { UsePresetsPagination } from './usePresetsPagination.types';
 const paginator = presetsFacade.listPaginator;
 const subject = new Subject<SearchParams>();
 const searchParamsObservable = subject.asObservable();
-let previousPage: number;
 
 const usePresetsPagination: UsePresetsPagination = (searchParams, clearCache = false) => {
 	const [pagination, setPagination] = useState<PaginationResponse<PresetListModel> | null>(null);
@@ -30,10 +29,7 @@ const usePresetsPagination: UsePresetsPagination = (searchParams, clearCache = f
 
 					return page === searchParams.page;
 				}),
-				tap(([page]) => {
-					presetsFacade.setIsFetching(true);
-					previousPage = page;
-				}),
+				tap(() => presetsFacade.setIsFetching(true)),
 				switchMap(([, searchParams]) =>
 					paginator.getPage(() =>
 						presetsFacade.getPresetsPaginated(omit(['page'], searchParams))
