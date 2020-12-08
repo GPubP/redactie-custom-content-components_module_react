@@ -21,3 +21,9 @@ export interface TableColumn<RowData = unknown> {
 	classList?: string[];
 	fallback?: string;
 }
+
+export interface FilterItem {
+	key: string;
+	valuePrefix: string;
+	value: string;
+}

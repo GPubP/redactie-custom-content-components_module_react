@@ -26,7 +26,7 @@ Core.routes.register({
 			path: MODULE_PATHS.overview,
 			component: CustomCCOverview,
 			navigation: {
-				label: 'Custom content componenten',
+				label: 'Content componenten',
 				order: 1,
 				parentPath: MODULE_PATHS.contentTypes,
 			},

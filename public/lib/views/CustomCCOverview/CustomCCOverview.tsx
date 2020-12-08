@@ -15,11 +15,12 @@ import {
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { MODULE_PATHS } from '../../customCC.const';
+import { FilterItem } from '../../customCC.types';
 
 import {
 	DEFAULT_FILTER_FORM,
@@ -34,8 +35,9 @@ const CustomCCOverview: FC = () => {
 	 */
 
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
-	const [activeFilters, setActiveFilters] = useState<any[]>([]);
+	const [activeFilters, setActiveFilters] = useState<FilterItem[]>([]);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(DEFAULT_FILTER_FORM);
+	const [initialLoading, setInitialLoading] = useState(true);
 
 	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS);
 	const [t] = useCoreTranslation();
@@ -46,6 +48,14 @@ const CustomCCOverview: FC = () => {
 	// TODO: replace by correct hooks
 	const loadingContentTypes = 'loaded' as LoadingState;
 	const meta = { skip: 0, total: 0 };
+
+	// Set initial loading
+	useEffect(() => {
+		if (initialLoading && !loading) {
+			setInitialLoading(false);
+		}
+	}, [initialLoading, loading]);
+
 
 	/**
 	 * Methods
@@ -91,11 +101,16 @@ const CustomCCOverview: FC = () => {
 	 */
 
 	const renderOverview = (): ReactElement | null => {
-		const customCCRows: OverviewTableRow[] = [].map(() => ({
-			name: '',
-			description: '',
-			status: false,
-			onEdit: () => navigate(''),
+		if (!pagination?.data.length) {
+			return null;
+		}
+
+		const customCCRows: OverviewTableRow[] = pagination?.data.map(preset => ({
+			uuid: preset.uuid,
+			name: preset.data.label,
+			description: `[${preset.data.name}]`,
+			active: true,
+			navigate,
 		}));
 
 		return (
@@ -127,7 +142,7 @@ const CustomCCOverview: FC = () => {
 
 	return (
 		<>
-			<ContextHeader title="Content types">
+			<ContextHeader title="Content componenten">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
 					<Button iconLeft="plus" onClick={() => navigate(MODULE_PATHS.create)}>
@@ -136,7 +151,7 @@ const CustomCCOverview: FC = () => {
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
-				<DataLoader loadingState={false} render={renderOverview} />
+				<DataLoader loadingState={initialLoading} render={renderOverview} />
 			</Container>
 		</>
 	);

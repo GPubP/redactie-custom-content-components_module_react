@@ -29,6 +29,7 @@ const FilterForm: FC<FilterFormProps> = ({
 				initialValues={initialState}
 				onSubmit={onSubmit}
 				validationSchema={FILTER_FORM_VALIDATION_SCHEMA}
+				enableReinitialize
 			>
 				{({ resetForm, submitForm }) => {
 					return (
@@ -46,7 +47,7 @@ const FilterForm: FC<FilterFormProps> = ({
 							onFilterRemove={clearActiveFilter}
 						>
 							<FilterBody>
-								<div className="col-xs-12 col-md-6">
+								<div className="col-xs-12 col-md-6 u-margin-bottom">
 									<Field
 										as={TextField}
 										label="Naam"
@@ -55,13 +56,13 @@ const FilterForm: FC<FilterFormProps> = ({
 										placeholder="Zoek op naam"
 									/>
 								</div>
-								<div className="col-xs-12 col-md-6">
+								<div className="col-xs-12 col-md-6 sm:u-margin-bottom">
 									<Field
 										as={Select}
 										label="Status"
 										name="status"
 										options={[]}
-										placeholder="Zoek op naam"
+										placeholder="Status"
 									/>
 								</div>
 							</FilterBody>
