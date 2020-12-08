@@ -5,16 +5,33 @@ import React from 'react';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
+import { MODULE_PATHS } from '../../customCC.const';
 import { TableColumn } from '../../customCC.types';
 
 import { OverviewTableRow } from './CustomCCOverview.types';
 
 export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
-	name: {
+	page: {
+		defaultValue: 1,
+		type: 'number',
+	},
+	skip: {
+		defaultValue: 0,
+		type: 'number',
+	},
+	limit: {
+		defaultValue: 10,
+		type: 'number',
+	},
+	search: {
 		defaultValue: '',
 		type: 'string',
 	},
-	status: {
+	sort: {
+		defaultValue: '',
+		type: 'string',
+	},
+	direction: {
 		defaultValue: '',
 		type: 'string',
 	},
@@ -29,27 +46,39 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'name',
-		component(name: string, rowData: OverviewTableRow) {
+		component(name: string, { description }: OverviewTableRow) {
 			return (
 				<>
 					{name}
-					<p className="u-text-light u-margin-top-xs">{rowData.description}</p>
+					{description && <p className="u-text-sm u-text-light">{description}</p>}
 				</>
 			);
 		},
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-		value: 'status',
-		component(status: boolean, rowData: OverviewTableRow) {
-			return null;
+		value: 'active',
+		component(active: boolean) {
+			const activeClassName = active ? 'u-text-success' : 'u-text-danger';
+			const activeLabel = active
+				? t(CORE_TRANSLATIONS.STATUS_ACTIVE)
+				: t(CORE_TRANSLATIONS['STATUS_NON-ACTIVE']);
+			return <span className={activeClassName}>{activeLabel}</span>;
 		},
 	},
 	{
-		label: t(CORE_TRANSLATIONS.TABLE_NAME),
-		value: 'actions',
-		component(value: any, rowData: OverviewTableRow) {
-			return <Button onClick={rowData.onEdit} />;
+		label: '',
+		classList: ['u-text-right'],
+		disableSorting: true,
+		component(value: unknown, { navigate, uuid }: OverviewTableRow) {
+			return (
+				<Button
+					ariaLabel="Edit"
+					icon="edit"
+					onClick={() => navigate(MODULE_PATHS.detail, { uuid })}
+					transparent
+				/>
+			);
 		},
 	},
 ];

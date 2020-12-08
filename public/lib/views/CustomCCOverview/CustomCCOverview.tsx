@@ -9,8 +9,9 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	DataLoader,
-	LoadingState,
 	OrderBy,
+	parseOrderByToString,
+	parseStringToOrderBy,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
@@ -21,6 +22,7 @@ import { FilterForm, FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { MODULE_PATHS } from '../../customCC.const';
 import { FilterItem } from '../../customCC.types';
+import { usePresetsPagination } from '../../hooks';
 
 import {
 	DEFAULT_FILTER_FORM,
@@ -39,15 +41,22 @@ const CustomCCOverview: FC = () => {
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(DEFAULT_FILTER_FORM);
 	const [initialLoading, setInitialLoading] = useState(true);
 
-	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS);
+	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS, false);
 	const [t] = useCoreTranslation();
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[]);
+	const { loading, pagination } = usePresetsPagination(query);
 
-	// TODO: replace by correct hooks
-	const loadingContentTypes = 'loaded' as LoadingState;
-	const meta = { skip: 0, total: 0 };
+	const createFilters = useCallback((values: FilterFormState) => {
+		return [
+			{
+				key: 'search',
+				valuePrefix: 'Zoekterm',
+				value: values.name,
+			},
+		].filter(f => !!f.value);
+	}, []);
 
 	// Set initial loading
 	useEffect(() => {
@@ -56,6 +65,18 @@ const CustomCCOverview: FC = () => {
 		}
 	}, [initialLoading, loading]);
 
+	// Set initial values with query params
+	useEffect(() => {
+		if (query.search) {
+			const initialFilterState = { ...filterFormState, name: query.search };
+			setFilterFormState(initialFilterState);
+			setActiveFilters(createFilters(initialFilterState));
+		}
+		if (query.sort) {
+			const { key, order } = parseStringToOrderBy(query.sort);
+			setActiveSorting({ order, key: `data.${key}` });
+		}
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**
 	 * Methods
@@ -64,36 +85,43 @@ const CustomCCOverview: FC = () => {
 	const clearAllFilters = (): void => {
 		// Reset filters, query params and filter form
 		setActiveFilters([]);
-		setQuery(DEFAULT_OVERVIEW_QUERY_PARAMS);
+		setQuery({ search: '' });
 		setFilterFormState(DEFAULT_FILTER_FORM);
 	};
 
-	const clearFilter = (item: any): void => {
+	const clearFilter = (item: FilterItem): void => {
+		console.log(item);
+
 		// Delete item from filters
 		const updatedFilters = activeFilters.filter(el => el.value !== item.value);
 		setActiveFilters(updatedFilters);
 		// Update searchParams
-		setQuery(DEFAULT_OVERVIEW_QUERY_PARAMS);
+		setQuery({ [item.key]: '' });
 		setFilterFormState({
 			...filterFormState,
-			[item.filterKey]: '',
+			[item.key]: '',
 		});
 	};
 
 	const onPageChange = (page: number): void => {
-		setQuery({ skip: (page - 1) * query.limit });
+		setQuery({
+			skip: (page - 1) * query.limit,
+			page,
+		});
 	};
 
 	const onOrderBy = (orderBy: OrderBy): void => {
-		setQuery({
-			sort: `meta.${orderBy.key}`,
-			direction: orderBy.order === 'desc' ? 1 : -1,
-		});
-		setActiveSorting(orderBy);
+		setQuery({ sort: parseOrderByToString(orderBy) });
+		const { key, order } = parseStringToOrderBy(query.sort);
+		setActiveSorting({ order, key: `data.${key}` });
 	};
 
-	const onSubmit = (): void => {
-		// TODO: handle submit
+	const onApplyFilters = (values: FilterFormState): void => {
+		// Update filters
+		setFilterFormState(values);
+		setActiveFilters(createFilters(values));
+		// Update query
+		setQuery({ search: values.name });
 	};
 
 	/**
@@ -117,9 +145,9 @@ const CustomCCOverview: FC = () => {
 			<>
 				<div className="u-margin-top">
 					<FilterForm
-						initialState={DEFAULT_FILTER_FORM}
+						initialState={filterFormState}
 						onCancel={clearAllFilters}
-						onSubmit={onSubmit}
+						onSubmit={onApplyFilters}
 						clearActiveFilter={clearFilter}
 						activeFilters={activeFilters}
 					/>
@@ -128,13 +156,13 @@ const CustomCCOverview: FC = () => {
 					className="u-margin-top"
 					columns={OVERVIEW_COLUMNS(t)}
 					rows={customCCRows}
-					currentPage={Math.ceil(meta.skip / query.limit) + 1}
+					currentPage={pagination?.currentPage || 1}
 					itemsPerPage={query.limit}
 					onPageChange={onPageChange}
 					orderBy={onOrderBy}
 					activeSorting={activeSorting}
-					totalValues={meta.total || 0}
-					loading={loadingContentTypes === LoadingState.Loading}
+					totalValues={pagination?.total || 0}
+					loading={loading}
 				/>
 			</>
 		);

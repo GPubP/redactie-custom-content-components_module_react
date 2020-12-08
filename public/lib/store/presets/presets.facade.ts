@@ -42,6 +42,9 @@ export class PresetsFacade {
 	public selectUIState(): Observable<PresetUIModel> {
 		return this.listQuery.selectUIState();
 	}
+	public getIsFetching(): boolean {
+		return this.listQuery.getIsFetching();
+	}
 
 	// DETAIL STATES
 	public readonly isCreating$ = this.detailQuery.isCreating$;

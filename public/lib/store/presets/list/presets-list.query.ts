@@ -14,6 +14,10 @@ export class PresetsListQuery extends CacheEntityQuery<any, PresetsListState> {
 		super(store);
 	}
 
+	public getIsFetching(): boolean {
+		return this.getValue().isFetching;
+	}
+
 	public selectUIState(): Observable<PresetUIModel> {
 		return combineQueries([
 			this.select(['error', 'isFetching']),
