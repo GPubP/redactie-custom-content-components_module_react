@@ -4,4 +4,8 @@ export const MODULE_PATHS = {
 	contentTypes: '/content-types',
 	root,
 	overview: `${root}/overzicht`,
+
+	create: `${root}/aanmaken`,
+
+	detail: `${root}/:uuid`,
 };

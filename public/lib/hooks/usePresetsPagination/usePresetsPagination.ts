@@ -8,28 +8,28 @@ import { filter, switchMap, tap } from 'rxjs/operators';
 import { PresetListModel, presetsFacade } from '../../store/presets';
 
 import { UsePresetsPagination } from './usePresetsPagination.types';
+
+const paginator = presetsFacade.listPaginator;
 const subject = new Subject<SearchParams>();
 const searchParamsObservable = subject.asObservable();
-let previousPage: number;
-const paginator = presetsFacade.listPaginator;
 
 const usePresetsPagination: UsePresetsPagination = (searchParams, clearCache = false) => {
 	const [pagination, setPagination] = useState<PaginationResponse<PresetListModel> | null>(null);
 	const prevSearchParams = usePrevious<SearchParams>(searchParams);
-	const loading = useObservable(presetsFacade.isFetching$, false);
+	const loading = useObservable(presetsFacade.isFetching$, true);
 	const error = useObservable(presetsFacade.listError$, null);
 
 	useEffect(() => {
 		const s = combineLatest([paginator.pageChanges, searchParamsObservable])
 			.pipe(
-				filter(([page, searchParams]) => page === searchParams.page),
-				tap(([page]) => {
-					if (previousPage !== page) {
-						// Don't show a loading indicator when we refresh the current page
-						presetsFacade.setIsFetching(true);
+				filter(([page, searchParams]) => {
+					if (presetsFacade.getIsFetching()) {
+						return false;
 					}
-					previousPage = page;
+
+					return page === searchParams.page;
 				}),
+				tap(() => presetsFacade.setIsFetching(true)),
 				switchMap(([, searchParams]) =>
 					paginator.getPage(() =>
 						presetsFacade.getPresetsPaginated(omit(['page'], searchParams))
