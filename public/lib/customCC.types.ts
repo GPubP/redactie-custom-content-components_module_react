@@ -1,10 +1,20 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
 export interface CustomCCModuleProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 	tenantId: string;
+}
+
+export interface CustomCCRouteParams {
+	presetUuid: string;
+}
+
+export interface CustomCCRouteProps<Params = CustomCCRouteParams>
+	extends RouteConfigComponentProps<Params> {
+	routes: ModuleRouteConfig[];
 }
 
 // TODO: move to utils types
@@ -27,3 +37,15 @@ export interface FilterItem {
 	valuePrefix: string;
 	value: string;
 }
+
+export interface Tab {
+	id?: string;
+	name: string;
+	target: string;
+	active: boolean;
+	disabled?: boolean;
+}
+
+export type FormikChildrenFn<Values = FormikValues> = (
+	formikProps: FormikProps<Values>
+) => ReactNode;

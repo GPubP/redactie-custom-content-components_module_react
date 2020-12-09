@@ -4,7 +4,7 @@ import React, { FC, useMemo } from 'react';
 
 import { MODULE_PATHS } from './lib/customCC.const';
 import { CustomCCModuleProps } from './lib/customCC.types';
-import { CustomCCOverview } from './lib/views';
+import { CustomCCCreate, CustomCCDetailSettings, CustomCCOverview } from './lib/views';
 
 const CustomCCComponent: FC<CustomCCModuleProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
@@ -30,6 +30,18 @@ Core.routes.register({
 				order: 1,
 				parentPath: MODULE_PATHS.contentTypes,
 			},
+		},
+		{
+			path: MODULE_PATHS.create,
+			component: CustomCCCreate,
+			breadcrumb: null,
+			redirect: MODULE_PATHS.createSettings,
+			routes: [
+				{
+					path: MODULE_PATHS.createSettings,
+					component: CustomCCDetailSettings,
+				},
+			],
 		},
 	],
 });
