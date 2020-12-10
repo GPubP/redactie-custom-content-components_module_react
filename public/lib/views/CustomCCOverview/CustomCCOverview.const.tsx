@@ -75,7 +75,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detail, { uuid })}
+					onClick={() => navigate(MODULE_PATHS.detail, { presetUuid: uuid })}
 					transparent
 				/>
 			);

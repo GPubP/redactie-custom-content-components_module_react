@@ -5,6 +5,7 @@ import { Tab } from './customCC.types';
 
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/content-componenten';
+export const BASE_DETAIL_PATH = `${root}/:presetUuid`;
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
@@ -16,14 +17,15 @@ export const MODULE_PATHS = {
 	create: `${root}/aanmaken`,
 	createSettings: `${root}/aanmaken/instellingen`,
 
-	detail: `${root}/:presetUuid`,
-	detailSettings: `${root}/:presetUuid/instellingen`,
-	detailCC: `${root}/:presetUuid/content-componenten`,
+	detail: BASE_DETAIL_PATH,
+	detailSettings: `${BASE_DETAIL_PATH}/instellingen`,
+	detailCC: `${BASE_DETAIL_PATH}/content-componenten`,
 };
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'custom-cc-create',
 	detailSettings: 'custom-cc-detail-settings',
+	detailCC: 'custom-cc-detail-cc',
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({
@@ -32,6 +34,7 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		`${TENANT_ROOT}`,
 		`${TENANT_ROOT}/content-componenten`,
 		`${TENANT_ROOT}/content-componenten/aanmaken`,
+		`${TENANT_ROOT}/content-componenten/:presetUuid`,
 	],
 	extraBreadcrumbs: [
 		{
