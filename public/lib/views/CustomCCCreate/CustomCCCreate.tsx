@@ -11,6 +11,7 @@ import {
 	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
+import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ import {
 } from '../../customCC.const';
 import { CustomCCRouteProps, TabsLinkProps } from '../../customCC.types';
 import { useActiveTabs } from '../../hooks';
+import { PresetCreateRequest } from '../../services/presets';
 import { presetsFacade } from '../../store/presets';
 
 import { CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS } from './CustomCCCreate.const';
@@ -49,7 +51,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 	 * Methods
 	 */
 
-	const generateEmptyPreset = (): any => ({
+	const generateEmptyPreset = (): PresetCreateRequest => ({
 		data: {
 			name: '',
 			label: '',
@@ -58,13 +60,21 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 		},
 	});
 
-	const createPreset = (sectionData: any): void => {
-		presetsFacade.createPreset({
-			...generateEmptyPreset(),
+	const createPreset = (sectionData: PresetCreateRequest['data']): void => {
+		const payload = {
 			data: {
-				...(sectionData as any),
+				...sectionData,
+				name: kebabCase(sectionData.label),
+				// TODO: remove this once default fieldType api call is available
+				fieldType: '5e848366b88e3f0122747224',
 			},
-		} as any);
+		} as PresetCreateRequest;
+
+		presetsFacade.createPreset(payload).then(response => {
+			if (response && response.uuid) {
+				navigate(MODULE_PATHS.detailCC, { presetUuid: response.uuid });
+			}
+		});
 	};
 
 	/**
@@ -76,7 +86,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 			allowedPaths: CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS,
 			preset: generateEmptyPreset(),
 			onCancel: () => navigate(MODULE_PATHS.overview),
-			onSubmit: (sectionData: any) => createPreset(sectionData),
+			onSubmit: (sectionData: PresetCreateRequest['data']) => createPreset(sectionData),
 		};
 
 		return (

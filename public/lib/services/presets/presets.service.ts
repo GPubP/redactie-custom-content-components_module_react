@@ -3,7 +3,11 @@ import { parseSearchParams, SearchParams } from '@redactie/utils';
 import { api } from '../api';
 
 import { DEFAULT_PRESETS_SEARCH_PARAMS, PRESETS_PREFIX_URL } from './presets.service.const';
-import { PresetDetailResponse, PresetsResponse } from './presets.service.types';
+import {
+	PresetCreateRequest,
+	PresetDetailResponse,
+	PresetsResponse,
+} from './presets.service.types';
 
 export class PresetsApiService {
 	public async getPresets(
@@ -14,6 +18,10 @@ export class PresetsApiService {
 
 	public async getPreset(uuid: string): Promise<PresetDetailResponse> {
 		return await api.get(`${PRESETS_PREFIX_URL}/${uuid}`).json();
+	}
+
+	public async createPreset(payload: PresetCreateRequest): Promise<PresetDetailResponse> {
+		return await api.post(PRESETS_PREFIX_URL, { json: payload }).json();
 	}
 }
 
