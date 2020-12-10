@@ -19,10 +19,9 @@ import {
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../customCC.const';
 import { FilterItem } from '../../customCC.types';
-import { usePresetsPagination } from '../../hooks';
 
 import {
 	DEFAULT_FILTER_FORM,
@@ -47,7 +46,7 @@ const CustomCCOverview: FC = () => {
 		routes as ModuleRouteConfig[],
 		BREADCRUMB_OPTIONS(generatePath)
 	);
-	const { loading, pagination } = usePresetsPagination(query);
+	const { loading, pagination } = contentTypesConnector.hooks.usePaginatedPresets(query);
 
 	// Set initial loading
 	useEffect(() => {

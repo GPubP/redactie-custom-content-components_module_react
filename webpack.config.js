@@ -9,6 +9,7 @@ module.exports = env => {
 		sassIncludes: [/public/, /node_modules\/@a-ui\/core/],
 		externals: {
 			'@redactie/translations-module': '@redactie/translations-module',
+			'@redactie/content-types-module': '@redactie/content-types-module',
 		},
 	})(env);
 

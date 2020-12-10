@@ -1,9 +1,7 @@
+import { CreatePresetPayload, PresetDetailModel } from '@redactie/content-types-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
-
-import { PresetCreateRequest } from './services/presets';
-import { PresetDetailModel } from './store/presets';
 
 export interface CustomCCModuleProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
@@ -30,7 +28,7 @@ export interface CustomCCDetailRouteProps<Params = CustomCCDetailRouteParams>
 	readonly allowedPaths?: string[];
 	readonly preset: PresetDetailModel;
 	onCancel: () => void;
-	onSubmit: (data: PresetCreateRequest['data'] | PresetDetailModel, tab: Tab) => void;
+	onSubmit: (data: CreatePresetPayload['data'] | PresetDetailModel, tab: Tab) => void;
 }
 
 // TODO: move to utils types
