@@ -1,8 +1,14 @@
 import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
-import { SearchParams } from '@redactie/utils';
+import { alertService, SearchParams } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
-import { presetsApiService, PresetsApiService } from '../../services/presets';
+import { ALERT_CONTAINER_IDS } from '../../customCC.const';
+import {
+	PresetCreateRequest,
+	PresetDetailResponse,
+	presetsApiService,
+	PresetsApiService,
+} from '../../services/presets';
 
 import {
 	PresetDetailModel,
@@ -21,6 +27,7 @@ import {
 	PresetsListStore,
 	presetsListStore,
 } from './list';
+import { getAlertMessages } from './preset.const';
 import { PresetUIModel } from './preset.types';
 
 export class PresetsFacade {
@@ -95,6 +102,34 @@ export class PresetsFacade {
 					throw error;
 				})
 		);
+	}
+
+	public createPreset(payload: PresetCreateRequest): Promise<PresetDetailModel | void> {
+		this.listStore.setIsCreating(true);
+
+		const alertMessages = getAlertMessages((payload as unknown) as PresetDetailResponse);
+
+		return this.service
+			.createPreset(payload)
+			.then(response => {
+				if (response) {
+					this.detailStore.add(response);
+					this.listPaginator.clearCache();
+					setTimeout(() => {
+						alertService.success(alertMessages.create.success, {
+							containerId: ALERT_CONTAINER_IDS.detailCC,
+						});
+					}, 300);
+				}
+				return response;
+			})
+			.catch(error => {
+				this.listStore.setError(error);
+				alertService.danger(alertMessages.create.error, {
+					containerId: ALERT_CONTAINER_IDS.detailSettings,
+				});
+			})
+			.finally(() => this.listStore.setIsCreating(false));
 	}
 
 	// DETAIL FUNCTIONS

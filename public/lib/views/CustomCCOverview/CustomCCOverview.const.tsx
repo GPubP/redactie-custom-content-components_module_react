@@ -46,7 +46,11 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 			return (
 				<>
 					{name}
-					{description && <p className="u-text-sm u-text-light">{description}</p>}
+					{description && (
+						<p>
+							<small>{description}</small>
+						</p>
+					)}
 				</>
 			);
 		},
@@ -71,7 +75,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detail, { uuid })}
+					onClick={() => navigate(MODULE_PATHS.detail, { presetUuid: uuid })}
 					transparent
 				/>
 			);

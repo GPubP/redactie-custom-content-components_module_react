@@ -234,3 +234,19 @@ export interface PresetsResponse {
 }
 
 export type PresetDetailResponse = BasePreset<Validator, FieldType>;
+
+/**
+ * =========================
+ * Request types
+ * - Define all request interfaces that are send to the server
+ * =========================
+ */
+
+export interface PresetCreateRequest {
+	data: {
+		name: string;
+		label: string;
+		fields: PresetDetailResponse['data']['fields'];
+		validators: PresetDetailResponse['data']['validators'];
+	};
+}
