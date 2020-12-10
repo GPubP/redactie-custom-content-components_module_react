@@ -3,7 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { useBreadcrumbs } from '@redactie/redactie-core';
+import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
 	DataLoader,
@@ -14,14 +14,19 @@ import {
 import React, { FC, ReactElement, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
+import {
+	ALERT_CONTAINER_IDS,
+	BREADCRUMB_OPTIONS,
+	CUSTOM_CC_DETAIL_TABS,
+	MODULE_PATHS,
+} from '../../customCC.const';
 import { CustomCCRouteProps, Tab } from '../../customCC.types';
 import { useActiveTabs } from '../../hooks';
 import { presetsFacade } from '../../store/presets';
 
 import { CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS } from './CustomCCCreate.const';
 
-const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, routes }) => {
+const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 	/**
 	 * Hooks
 	 */
@@ -31,8 +36,14 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, routes }) => {
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
 	const activeTabs = useActiveTabs(CUSTOM_CC_DETAIL_TABS.slice(0, 1), location.pathname);
-	const breadcrumbs = useBreadcrumbs(routes);
 	const { generatePath, navigate } = useNavigate();
+	const breadcrumbs = useBreadcrumbs(route.routes as ModuleRouteConfig[], {
+		...BREADCRUMB_OPTIONS(generatePath),
+		extraBreadcrumbs: [
+			...(BREADCRUMB_OPTIONS(generatePath).extraBreadcrumbs || []),
+			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
+		],
+	});
 
 	/**
 	 * Methods
@@ -47,7 +58,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, routes }) => {
 		},
 	});
 
-	const createPreset = (sectionData: any, tab: Tab): void => {
+	const createPreset = (sectionData: any): void => {
 		presetsFacade.createPreset({
 			...generateEmptyPreset(),
 			data: {
@@ -65,12 +76,12 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, routes }) => {
 			allowedPaths: CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS,
 			preset: generateEmptyPreset(),
 			onCancel: () => navigate(MODULE_PATHS.overview),
-			onSubmit: (sectionData: any, tab: Tab) => createPreset(sectionData, tab),
+			onSubmit: (sectionData: any) => createPreset(sectionData),
 		};
 
 		return (
 			<RenderChildRoutes
-				routes={routes}
+				routes={route.routes}
 				guardsMeta={guardsMeta}
 				extraOptions={extraOptions}
 			/>
@@ -86,7 +97,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, routes }) => {
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,
 				})}
-				title="Content type aanmaken"
+				title="Content component samenstellen"
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
@@ -95,7 +106,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, routes }) => {
 					toastClassName="u-margin-bottom"
 					containerId={ALERT_CONTAINER_IDS.create}
 				/>
-				<DataLoader loadingState={true} render={renderChildRoutes} />
+				<DataLoader loadingState={false} render={renderChildRoutes} />
 			</Container>
 		</>
 	);

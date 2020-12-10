@@ -2,6 +2,8 @@ import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
+import { PresetDetailModel } from './store/presets';
+
 export interface CustomCCModuleProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
@@ -15,6 +17,19 @@ export interface CustomCCRouteParams {
 export interface CustomCCRouteProps<Params = CustomCCRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
+}
+
+export interface CustomCCDetailRouteParams {
+	presetUuid: string;
+	contentComponentUuid: string;
+}
+
+export interface CustomCCDetailRouteProps<Params = CustomCCDetailRouteParams>
+	extends RouteConfigComponentProps<Params> {
+	readonly allowedPaths?: string[];
+	readonly preset: PresetDetailModel;
+	onCancel: () => void;
+	onSubmit: (data: any, tab: Tab) => void;
 }
 
 // TODO: move to utils types
@@ -49,3 +64,9 @@ export interface Tab {
 export type FormikChildrenFn<Values = FormikValues> = (
 	formikProps: FormikProps<Values>
 ) => ReactNode;
+
+export interface SelectOption {
+	label: string;
+	value: string;
+	disabled?: boolean;
+}

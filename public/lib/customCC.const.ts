@@ -1,11 +1,15 @@
+import { BreadcrumbOptions } from '@redactie/redactie-core';
+import { NavigateGenerateFn } from '@redactie/utils';
+
 import { Tab } from './customCC.types';
 
-export const root = '/custom-content-componenten';
-
 export const TENANT_ROOT = '/:tenantId';
+export const root = '/content-componenten';
 
 export const MODULE_PATHS = {
+	admin: '/dashboard',
 	contentTypes: '/content-types',
+
 	root,
 	overview: `${root}/overzicht`,
 
@@ -19,7 +23,28 @@ export const MODULE_PATHS = {
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'custom-cc-create',
+	detailSettings: 'custom-cc-detail-settings',
 };
+
+export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({
+	excludePaths: [
+		'/',
+		`${TENANT_ROOT}`,
+		`${TENANT_ROOT}/content-componenten`,
+		`${TENANT_ROOT}/content-componenten/aanmaken`,
+		// `${TENANT_ROOT}/content-componenten/aanmaken/instellingen`,
+	],
+	extraBreadcrumbs: [
+		{
+			name: 'Home',
+			target: generatePath(MODULE_PATHS.admin),
+		},
+		{
+			name: 'Structuur',
+			target: '',
+		},
+	],
+});
 
 export const CUSTOM_CC_DETAIL_TAB_MAP = {
 	settings: {

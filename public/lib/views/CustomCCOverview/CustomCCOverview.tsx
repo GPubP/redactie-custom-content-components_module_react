@@ -20,7 +20,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
-import { MODULE_PATHS } from '../../customCC.const';
+import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../customCC.const';
 import { FilterItem } from '../../customCC.types';
 import { usePresetsPagination } from '../../hooks';
 
@@ -41,9 +41,12 @@ const CustomCCOverview: FC = () => {
 	const [initialLoading, setInitialLoading] = useState(true);
 
 	const [t] = useCoreTranslation();
-	const { navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[]);
+	const breadcrumbs = useBreadcrumbs(
+		routes as ModuleRouteConfig[],
+		BREADCRUMB_OPTIONS(generatePath)
+	);
 	const { loading, pagination } = usePresetsPagination(query);
 
 	// Set initial loading
