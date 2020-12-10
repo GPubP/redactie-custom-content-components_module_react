@@ -70,3 +70,7 @@ export interface SelectOption {
 	value: string;
 	disabled?: boolean;
 }
+
+export interface TabsLinkProps {
+	href: string;
+}

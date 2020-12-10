@@ -32,7 +32,6 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		`${TENANT_ROOT}`,
 		`${TENANT_ROOT}/content-componenten`,
 		`${TENANT_ROOT}/content-componenten/aanmaken`,
-		// `${TENANT_ROOT}/content-componenten/aanmaken/instellingen`,
 	],
 	extraBreadcrumbs: [
 		{

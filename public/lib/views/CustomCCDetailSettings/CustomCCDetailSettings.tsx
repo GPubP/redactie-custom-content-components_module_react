@@ -29,14 +29,12 @@ const ContentTypeSettings: FC<CustomCCDetailRouteProps> = ({
 	 */
 	const [t] = useCoreTranslation();
 	const [listState, detailState] = usePresetsUIStates();
-	console.log(listState, detailState);
 
 	const formikRef = useRef<FormikProps<FormikValues>>();
-	const isLoading = false;
-	// const isLoading = useMemo(
-	// 	() => (isUpdate ? detailState?.isUpdating : !!listState?.isCreating),
-	// 	[detailState, isUpdate, listState]
-	// );
+	const isLoading = useMemo(
+		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
+		[detailState, isUpdate, listState]
+	);
 	const [formValue, setFormValue] = useState<PresetDetailModel | null>(null);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,

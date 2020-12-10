@@ -20,7 +20,7 @@ import {
 	CUSTOM_CC_DETAIL_TABS,
 	MODULE_PATHS,
 } from '../../customCC.const';
-import { CustomCCRouteProps, Tab } from '../../customCC.types';
+import { CustomCCRouteProps, TabsLinkProps } from '../../customCC.types';
 import { useActiveTabs } from '../../hooks';
 import { presetsFacade } from '../../store/presets';
 
@@ -92,7 +92,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 		<>
 			<ContextHeader
 				tabs={activeTabs}
-				linkProps={(props: any) => ({
+				linkProps={(props: TabsLinkProps) => ({
 					...props,
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,
