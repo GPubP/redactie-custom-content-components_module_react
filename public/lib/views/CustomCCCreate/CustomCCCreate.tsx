@@ -3,6 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
+import { CreatePresetPayload } from '@redactie/content-types-module';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
@@ -15,6 +16,7 @@ import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
+import { contentTypesConnector } from '../../connectors';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
@@ -23,8 +25,6 @@ import {
 } from '../../customCC.const';
 import { CustomCCRouteProps, TabsLinkProps } from '../../customCC.types';
 import { useActiveTabs } from '../../hooks';
-import { PresetCreateRequest } from '../../services/presets';
-import { presetsFacade } from '../../store/presets';
 
 import { CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS } from './CustomCCCreate.const';
 
@@ -51,7 +51,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 	 * Methods
 	 */
 
-	const generateEmptyPreset = (): PresetCreateRequest => ({
+	const generateEmptyPreset = (): CreatePresetPayload => ({
 		data: {
 			name: '',
 			label: '',
@@ -60,7 +60,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 		},
 	});
 
-	const createPreset = (sectionData: PresetCreateRequest['data']): void => {
+	const createPreset = (sectionData: CreatePresetPayload['data']): void => {
 		const payload = {
 			data: {
 				...sectionData,
@@ -68,13 +68,18 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 				// TODO: remove this once default fieldType api call is available
 				fieldType: '5e848366b88e3f0122747224',
 			},
-		} as PresetCreateRequest;
+		} as CreatePresetPayload;
 
-		presetsFacade.createPreset(payload).then(response => {
-			if (response && response.uuid) {
-				navigate(MODULE_PATHS.detailCC, { presetUuid: response.uuid });
-			}
-		});
+		contentTypesConnector.presetsFacade
+			.createPreset(payload, {
+				errorAlertContainerId: ALERT_CONTAINER_IDS.create,
+				successAlertContainerId: ALERT_CONTAINER_IDS.detailCC,
+			})
+			.then(response => {
+				if (response && response.uuid) {
+					navigate(MODULE_PATHS.detailCC, { presetUuid: response.uuid });
+				}
+			});
 	};
 
 	/**
@@ -86,7 +91,7 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 			allowedPaths: CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS,
 			preset: generateEmptyPreset(),
 			onCancel: () => navigate(MODULE_PATHS.overview),
-			onSubmit: (sectionData: PresetCreateRequest['data']) => createPreset(sectionData),
+			onSubmit: (sectionData: CreatePresetPayload['data']) => createPreset(sectionData),
 		};
 
 		return (

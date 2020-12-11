@@ -1,5 +1,6 @@
 import { Button } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { PresetDetailModel } from '@redactie/content-types-module';
 import {
 	AlertContainer,
 	alertService,
@@ -10,11 +11,9 @@ import { FormikProps, FormikValues } from 'formik';
 import React, { FC, useMemo, useRef, useState } from 'react';
 
 import { CustomCCSettingsForm } from '../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP } from '../../customCC.const';
 import { CustomCCDetailRouteProps } from '../../customCC.types';
-import { usePresetsUIStates } from '../../hooks';
-import { PresetDetailModel } from '../../store/presets';
 
 const ContentTypeSettings: FC<CustomCCDetailRouteProps> = ({
 	allowedPaths,
@@ -28,7 +27,7 @@ const ContentTypeSettings: FC<CustomCCDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
-	const [listState, detailState] = usePresetsUIStates();
+	const [listState, detailState] = contentTypesConnector.hooks.usePresetsUIStates();
 
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(

@@ -1,9 +1,8 @@
+import { PresetDetailModel } from '@redactie/content-types-module';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode, Ref } from 'react';
 
 import { FormikChildrenFn } from '../../../customCC.types';
-import { PresetDetailModel } from '../../../store/presets';
-
 export interface CustomCCSetingsFormProps {
 	children?: FormikChildrenFn<PresetDetailModel> | ReactNode;
 	disabled?: boolean;

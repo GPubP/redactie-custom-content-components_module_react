@@ -7,9 +7,10 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { DataLoader, RenderChildRoutes, useNavigate, useTenantContext } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
+import { contentTypesConnector } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
 import { CustomCCRouteProps } from '../../customCC.types';
-import { useActivePreset, useActiveTabs, usePresetsUIStates } from '../../hooks';
+import { useActiveTabs } from '../../hooks';
 
 const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 	const { presetUuid } = match.params;
@@ -31,8 +32,8 @@ const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const [activePreset] = useActivePreset(presetUuid);
-	const [, detailState] = usePresetsUIStates();
+	const [activePreset] = contentTypesConnector.hooks.useActivePreset(presetUuid);
+	const [, detailState] = contentTypesConnector.hooks.usePresetsUIStates();
 
 	useEffect(() => {
 		if (initialLoading && !detailState?.isFetching && activePreset) {
