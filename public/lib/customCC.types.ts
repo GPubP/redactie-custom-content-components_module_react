@@ -1,4 +1,6 @@
 import { CreatePresetPayload, PresetDetailModel } from '@redactie/content-types-module';
+import { FieldType } from '@redactie/content-types-module/dist/lib/services/fieldTypes';
+import { Preset } from '@redactie/content-types-module/dist/lib/services/presets';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
@@ -26,9 +28,18 @@ export interface CustomCCDetailRouteParams {
 export interface CustomCCDetailRouteProps<Params = CustomCCDetailRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	readonly allowedPaths?: string[];
+	readonly fieldsHaveChanged: boolean;
+	readonly fieldTypes: FieldType[];
 	readonly preset: PresetDetailModel;
+	readonly presets: Preset[];
 	onCancel: () => void;
 	onSubmit: (data: CreatePresetPayload['data'] | PresetDetailModel, tab: Tab) => void;
+}
+
+export enum PageType {
+	Preset,
+	Field,
+	DynamicField,
 }
 
 // TODO: move to utils types

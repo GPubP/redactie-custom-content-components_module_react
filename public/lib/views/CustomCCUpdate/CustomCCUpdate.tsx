@@ -4,26 +4,35 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { DataLoader, RenderChildRoutes, useNavigate, useTenantContext } from '@redactie/utils';
+import {
+	DataLoader,
+	RenderChildRoutes,
+	useDetectValueChangesWorker,
+	useNavigate,
+	useTenantContext,
+} from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { contentTypesConnector } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
-import { CustomCCRouteProps } from '../../customCC.types';
-import { useActiveTabs } from '../../hooks';
+import { CustomCCRouteProps, TabsLinkProps } from '../../customCC.types';
+import { useActiveRouteConfig, useActiveTabs } from '../../hooks';
 
 const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 	const { presetUuid } = match.params;
+
 	/**
 	 * Hooks
 	 */
 
 	const { tenantId } = useTenantContext();
-	const { generatePath } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 
 	const [initialLoading, setInitialLoading] = useState(true);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
+	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const activeTabs = useActiveTabs(CUSTOM_CC_DETAIL_TABS, location.pathname);
 	const breadcrumbs = useBreadcrumbs(route.routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
@@ -33,13 +42,60 @@ const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 		],
 	});
 	const [activePreset] = contentTypesConnector.hooks.useActivePreset(presetUuid);
-	const [, detailState] = contentTypesConnector.hooks.usePresetsUIStates();
+	const [presetsLoading, presets] = contentTypesConnector.hooks.usePresets();
+	const [, detailState] = (contentTypesConnector.hooks.usePresetsUIStates as any)(presetUuid);
+	const [fieldTypesLoading, fieldTypes] = contentTypesConnector.hooks.useFieldTypes();
+	const [fieldsHaveChanged] = useDetectValueChangesWorker(
+		detailState && !detailState.isFetching,
+		activePreset?.data?.fields,
+		BFF_MODULE_PUBLIC_PATH
+	);
 
-	useEffect(() => {
-		if (initialLoading && !detailState?.isFetching && activePreset) {
-			setInitialLoading(false);
+	const pageTitle = useMemo(() => {
+		if (!activeRouteConfig || typeof activeRouteConfig.title !== 'function') {
+			return;
 		}
-	}, [activePreset, detailState, initialLoading]);
+
+		return activeRouteConfig.title(activePreset);
+	}, [activePreset, activeRouteConfig]);
+
+	// Fetch fieldTypes and presets
+	useEffect(() => {
+		contentTypesConnector.fieldTypesFacade.getFieldTypes();
+		contentTypesConnector.presetsFacade.getPresets();
+	}, []);
+
+	// Set initial loading
+	useEffect(() => {
+		if (
+			initialLoading &&
+			!presetsLoading &&
+			!fieldTypesLoading &&
+			detailState &&
+			!detailState.isFetching &&
+			activePreset &&
+			fieldTypes &&
+			presets
+		) {
+			return setInitialLoading(false);
+		}
+	}, [
+		fieldTypes,
+		presets,
+		presetsLoading,
+		fieldTypesLoading,
+		initialLoading,
+		detailState,
+		activePreset,
+	]);
+
+	/**
+	 * Methods
+	 */
+
+	const onCancel = (): void => {
+		navigate(MODULE_PATHS.overview);
+	};
 
 	/**
 	 * Render
@@ -47,7 +103,11 @@ const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
+			fieldTypes,
+			fieldsHaveChanged,
 			preset: activePreset,
+			presets,
+			onCancel,
 		};
 
 		return (
@@ -61,7 +121,17 @@ const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 
 	return (
 		<>
-			<ContextHeader tabs={activeTabs} title="Content component bewerken">
+			<ContextHeader
+				linkProps={(props: TabsLinkProps) => ({
+					...props,
+					to: generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
+						presetUuid,
+					}),
+					component: Link,
+				})}
+				tabs={activeTabs}
+				title={pageTitle}
+			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
