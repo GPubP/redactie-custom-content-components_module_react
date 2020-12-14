@@ -1,3 +1,5 @@
+import { Preset } from '@redactie/content-types-module/dist/lib/services/presets';
+
 export interface AddCCFormProps {
 	className?: string;
 	fieldTypeOptions: {
@@ -7,7 +9,7 @@ export interface AddCCFormProps {
 	}[];
 	formState: AddCCFormState;
 	onSubmit: (formValues: AddCCFormState) => void;
-	// [elementProp: string]: unknown;
+	presets: Preset[];
 }
 
 export interface AddCCFormState {

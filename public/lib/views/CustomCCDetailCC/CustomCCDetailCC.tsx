@@ -123,6 +123,7 @@ const CustomCCDetailCC: FC<CustomCCDetailRouteProps> = ({
 									name: '',
 								}}
 								onSubmit={onAddCCSubmit}
+								presets={presets}
 							/>
 						</div>
 					</Card>

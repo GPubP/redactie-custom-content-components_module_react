@@ -9,13 +9,19 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors';
 import { ADD_CC_FORM_VALIDATION_SCHEMA, FIELD_TYPES_DEFAULT_OPTION } from './AddCCForm.const';
 import { AddCCFormProps } from './AddCCForm.types';
 
-const AddCCForm: FC<AddCCFormProps> = ({ className, fieldTypeOptions, formState, onSubmit }) => {
+const AddCCForm: FC<AddCCFormProps> = ({
+	className,
+	fieldTypeOptions,
+	formState,
+	onSubmit,
+	presets,
+}) => {
 	const [t] = useCoreTranslation();
 
 	return (
 		<Formik
 			initialValues={formState}
-			validationSchema={ADD_CC_FORM_VALIDATION_SCHEMA()}
+			validationSchema={ADD_CC_FORM_VALIDATION_SCHEMA(presets)}
 			onSubmit={onSubmit}
 		>
 			{({ submitForm }) => (
