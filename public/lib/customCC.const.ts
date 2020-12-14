@@ -6,6 +6,9 @@ import { Tab } from './customCC.types';
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/content-componenten';
 export const BASE_DETAIL_PATH = `${root}/:presetUuid`;
+export const DETAIL_CC_PATH = `${BASE_DETAIL_PATH}/content-componenten`;
+export const CC_NEW_PATH = `${DETAIL_CC_PATH}/aanmaken`;
+export const CC_EDIT_PATH = `${DETAIL_CC_PATH}/bewerken`;
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
@@ -19,7 +22,10 @@ export const MODULE_PATHS = {
 
 	detail: BASE_DETAIL_PATH,
 	detailSettings: `${BASE_DETAIL_PATH}/instellingen`,
-	detailCC: `${BASE_DETAIL_PATH}/content-componenten`,
+	detailCC: DETAIL_CC_PATH,
+	detailCCNew: CC_NEW_PATH,
+	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,
+	detailCCEdit: CC_EDIT_PATH,
 };
 
 export const ALERT_CONTAINER_IDS = {

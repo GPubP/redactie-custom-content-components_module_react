@@ -3,7 +3,8 @@ import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
 import { MODULE_PATHS } from './lib/customCC.const';
-import { CustomCCModuleProps } from './lib/customCC.types';
+import { CustomCCModuleProps, PageType } from './lib/customCC.types';
+import { getPageTitle } from './lib/helpers';
 import {
 	CustomCCCreate,
 	CustomCCDetailCC,
@@ -58,10 +59,12 @@ Core.routes.register({
 				{
 					path: MODULE_PATHS.detailSettings,
 					component: CustomCCDetailSettings,
+					title: getPageTitle(PageType.Preset),
 				},
 				{
 					path: MODULE_PATHS.detailCC,
 					component: CustomCCDetailCC,
+					title: getPageTitle(PageType.Preset),
 				},
 			],
 		},
