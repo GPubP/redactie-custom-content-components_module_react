@@ -29,7 +29,7 @@ const CustomCCDetailCC: FC<CustomCCDetailRouteProps> = ({
 
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
-	const [, detailState] = (contentTypesConnector.hooks.usePresetsUIStates as any)(presetUuid);
+	const [, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
 	const isLoading = useMemo(() => (!detailState ? true : (detailState.isUpdating as boolean)), [
 		detailState,
 	]);
