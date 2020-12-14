@@ -6,7 +6,7 @@ const useActiveTabs = (tabs: Tab[], pathname: string): Tab[] => {
 	const activeTabs = useMemo(() => {
 		return tabs.map(tab => ({
 			...tab,
-			active: new RegExp(`/${tab.target}/?`).test(pathname),
+			active: new RegExp(`/${tab.target}/?$`).test(pathname),
 		}));
 	}, [pathname, tabs]);
 
