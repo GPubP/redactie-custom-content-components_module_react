@@ -4,16 +4,16 @@ import { AlertContainer, LeavePrompt, useNavigate } from '@redactie/utils';
 import { path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
-import { AddCCForm } from '../../components';
+import { AddCCForm, AddCCFormState } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
-import { CustomCCDetailRouteProps } from '../../customCC.types';
+import { DetailRouteProps } from '../../customCC.types';
 import { sortFieldTypes } from '../../helpers';
 
-import { DETAIL_CC_ALLOWED_PATHS, DETAIL_CC_COLUMNS } from './CustomCCDetailCC.const';
-import { DetailCCRowData } from './CustomCCDetailCC.types';
+import { DETAIL_CC_ALLOWED_PATHS, DETAIL_CC_COLUMNS } from './DetailCC.const';
+import { DetailCCRowData } from './DetailCC.types';
 
-const CustomCCDetailCC: FC<CustomCCDetailRouteProps> = ({
+const DetailCCView: FC<DetailRouteProps> = ({
 	fieldsHaveChanged,
 	fieldTypes,
 	match,
@@ -35,7 +35,10 @@ const CustomCCDetailCC: FC<CustomCCDetailRouteProps> = ({
 	]);
 	const fields = useMemo(() => {
 		const filteredPresets = presets.filter(p => p.uuid !== presetUuid);
-		return [...fieldTypes, ...filteredPresets].sort(sortFieldTypes);
+		return [...fieldTypes, ...filteredPresets].sort(sortFieldTypes).map(f => ({
+			...f,
+			isPreset: !!f.data?.fieldType,
+		}));
 	}, [fieldTypes, presetUuid, presets]);
 
 	/**
@@ -52,8 +55,22 @@ const CustomCCDetailCC: FC<CustomCCDetailRouteProps> = ({
 	 * Methods
 	 */
 
-	const onAddCCSubmit = (): void => {
-		// TODO: handle add cc
+	const onAddCCSubmit = ({ name, fieldType }: AddCCFormState): void => {
+		const selectedCC = fields.find(f => f.uuid === fieldType);
+		if (!selectedCC) {
+			return;
+		}
+
+		const queryParams = new URLSearchParams(
+			selectedCC.isPreset
+				? {
+						name,
+						presetUUID: selectedCC.uuid,
+				  }
+				: { name, fieldTypeUUID: selectedCC.uuid }
+		);
+
+		navigate(`${MODULE_PATHS.detailCCNewSettingsCC}`, { presetUuid }, {}, queryParams);
 	};
 
 	const onCCSave = (): void => {
@@ -159,4 +176,4 @@ const CustomCCDetailCC: FC<CustomCCDetailRouteProps> = ({
 	);
 };
 
-export default CustomCCDetailCC;
+export default DetailCCView;

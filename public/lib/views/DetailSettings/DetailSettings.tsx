@@ -13,14 +13,9 @@ import React, { FC, useMemo, useRef, useState } from 'react';
 import { CustomCCSettingsForm } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP } from '../../customCC.const';
-import { CustomCCDetailRouteProps } from '../../customCC.types';
+import { DetailRouteProps } from '../../customCC.types';
 
-const ContentTypeSettings: FC<CustomCCDetailRouteProps> = ({
-	allowedPaths,
-	onCancel,
-	onSubmit,
-	preset,
-}) => {
+const DetailSettingsView: FC<DetailRouteProps> = ({ allowedPaths, onCancel, onSubmit, preset }) => {
 	const isUpdate = !!preset.uuid;
 
 	/**
@@ -125,4 +120,4 @@ const ContentTypeSettings: FC<CustomCCDetailRouteProps> = ({
 	);
 };
 
-export default ContentTypeSettings;
+export default DetailSettingsView;

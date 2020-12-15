@@ -9,7 +9,7 @@ import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS, TENANT_ROOT } from '../../customCC.const';
 import { TableColumn } from '../../customCC.types';
 
-import { DetailCCRowData } from './CustomCCDetailCC.types';
+import { DetailCCRowData } from './DetailCC.types';
 
 export const DETAIL_CC_COLUMNS = (
 	t: TranslateFunc,
@@ -101,6 +101,6 @@ export const DETAIL_CC_COLUMNS = (
 
 export const DETAIL_CC_ALLOWED_PATHS = [
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`,
-	`${TENANT_ROOT}${MODULE_PATHS.detailCCNew}`,
-	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewSettings}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewCC}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewSettingsCC}`,
 ];

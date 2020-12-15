@@ -23,12 +23,12 @@ import {
 	CUSTOM_CC_DETAIL_TABS,
 	MODULE_PATHS,
 } from '../../customCC.const';
-import { CustomCCRouteProps, TabsLinkProps } from '../../customCC.types';
+import { RouteProps, TabsLinkProps } from '../../customCC.types';
 import { useActiveTabs } from '../../hooks';
 
-import { CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS } from './CustomCCCreate.const';
+import { CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS } from './Create.const';
 
-const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
+const CreateView: FC<RouteProps> = ({ location, route }) => {
 	/**
 	 * Hooks
 	 */
@@ -127,4 +127,4 @@ const CustomCCCreate: FC<CustomCCRouteProps> = ({ location, route }) => {
 	);
 };
 
-export default CustomCCCreate;
+export default CreateView;

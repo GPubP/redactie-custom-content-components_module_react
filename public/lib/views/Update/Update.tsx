@@ -7,6 +7,7 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	DataLoader,
 	RenderChildRoutes,
+	useActiveRouteConfig,
 	useDetectValueChangesWorker,
 	useNavigate,
 	useTenantContext,
@@ -16,11 +17,12 @@ import { Link } from 'react-router-dom';
 
 import { contentTypesConnector } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
-import { CustomCCRouteProps, TabsLinkProps } from '../../customCC.types';
-import { useActiveRouteConfig, useActiveTabs } from '../../hooks';
+import { RouteProps, TabsLinkProps } from '../../customCC.types';
+import { useActiveTabs } from '../../hooks';
 
-const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
+const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	const { presetUuid } = match.params;
+	const showTabs = !/\/(aanmaken|bewerken)\//.test(location.pathname);
 
 	/**
 	 * Hooks
@@ -129,7 +131,7 @@ const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 					}),
 					component: Link,
 				})}
-				tabs={activeTabs}
+				tabs={showTabs && activeTabs}
 				title={pageTitle}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
@@ -141,4 +143,4 @@ const CustomCCUpdate: FC<CustomCCRouteProps> = ({ location, route, match }) => {
 	);
 };
 
-export default CustomCCUpdate;
+export default UpdateView;

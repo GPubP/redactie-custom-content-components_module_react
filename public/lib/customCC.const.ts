@@ -23,8 +23,12 @@ export const MODULE_PATHS = {
 	detail: BASE_DETAIL_PATH,
 	detailSettings: `${BASE_DETAIL_PATH}/instellingen`,
 	detailCC: DETAIL_CC_PATH,
-	detailCCNew: CC_NEW_PATH,
-	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,
+
+	detailCCNewCC: CC_NEW_PATH,
+	detailCCNewSettingsCC: `${CC_NEW_PATH}/instellingen`,
+	detailCCNewConfigCC: `${CC_NEW_PATH}/configuratie`,
+	detailCCNewValidationCC: `${CC_NEW_PATH}/validatie`,
+
 	detailCCEdit: CC_EDIT_PATH,
 };
 

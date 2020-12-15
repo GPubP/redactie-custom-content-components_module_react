@@ -17,6 +17,14 @@ class ContentTypesConnector {
 		return this.api.hooks;
 	}
 
+	public get views(): ContentTypeAPI['views'] {
+		return this.api.views;
+	}
+
+	public get helpers(): ContentTypeAPI['helpers'] {
+		return this.api.helpers;
+	}
+
 	constructor(api?: ContentTypeAPI) {
 		if (!api) {
 			throw new Error(

@@ -8,7 +8,7 @@ import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS } from '../../customCC.const';
 import { TableColumn } from '../../customCC.types';
 
-import { OverviewTableRow } from './CustomCCOverview.types';
+import { OverviewTableRow } from './Overview.types';
 
 export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 	page: {

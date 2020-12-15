@@ -27,10 +27,10 @@ import {
 	DEFAULT_FILTER_FORM,
 	DEFAULT_OVERVIEW_QUERY_PARAMS,
 	OVERVIEW_COLUMNS,
-} from './CustomCCOverview.const';
-import { OverviewTableRow } from './CustomCCOverview.types';
+} from './Overview.const';
+import { OverviewTableRow } from './Overview.types';
 
-const CustomCCOverview: FC = () => {
+const OverviewView: FC = () => {
 	/**
 	 * Hooks
 	 */
@@ -171,4 +171,4 @@ const CustomCCOverview: FC = () => {
 	);
 };
 
-export default CustomCCOverview;
+export default OverviewView;
