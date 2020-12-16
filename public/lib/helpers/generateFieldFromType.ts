@@ -1,5 +1,5 @@
-import { guid } from '@datorama/akita';
 import { Field, FieldTypeDetailModel, PresetDetailModel } from '@redactie/content-types-module';
+import { v4 as uuidv4 } from 'uuid';
 
 import { contentTypesConnector } from '../connectors';
 
@@ -9,7 +9,7 @@ export const generateFieldFromType = (
 	preset?: PresetDetailModel
 ): Omit<Field, 'compartment'> => ({
 	__new: true,
-	uuid: guid(),
+	uuid: uuidv4(),
 	label: '',
 	module: fieldType.data.module || '',
 	name: '',

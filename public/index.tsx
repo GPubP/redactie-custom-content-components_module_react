@@ -8,8 +8,8 @@ import { ModuleProps, PageType } from './lib/customCC.types';
 import { getPageTitle } from './lib/helpers';
 import {
 	CreateView,
-	DetailCCNewCCView,
-	DetailCCUpdateCCView,
+	DetailCCNewFieldView,
+	DetailCCUpdateFieldView,
 	DetailCCView,
 	DetailSettingsView,
 	OverviewView,
@@ -60,23 +60,46 @@ Core.routes.register({
 			redirect: MODULE_PATHS.detailSettings,
 			routes: [
 				{
-					path: MODULE_PATHS.detailCCNewCC,
+					path: MODULE_PATHS.detailCCNewField,
 					breadcrumb: null,
-					component: DetailCCNewCCView,
-					redirect: MODULE_PATHS.detailCCNewSettingsCC,
+					component: DetailCCNewFieldView,
+					redirect: MODULE_PATHS.detailCCNewFieldSettings,
 					routes: [
 						{
-							path: MODULE_PATHS.detailCCNewSettingsCC,
+							path: MODULE_PATHS.detailCCNewFieldSettings,
 							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
 							title: getPageTitle(PageType.Field),
 						},
 						{
-							path: MODULE_PATHS.detailCCNewConfigCC,
+							path: MODULE_PATHS.detailCCNewFieldConfig,
 							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
 							title: getPageTitle(PageType.Field),
 						},
 						{
-							path: MODULE_PATHS.detailCCNewValidationCC,
+							path: MODULE_PATHS.detailCCNewFieldValidation,
+							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
+							title: getPageTitle(PageType.Field),
+						},
+					],
+				},
+				{
+					path: MODULE_PATHS.detailCCUpdateField,
+					breadcrumb: null,
+					component: DetailCCUpdateFieldView,
+					redirect: MODULE_PATHS.detailCCUpdateFieldSettings,
+					routes: [
+						{
+							path: MODULE_PATHS.detailCCUpdateFieldSettings,
+							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
+							title: getPageTitle(PageType.Field),
+						},
+						{
+							path: MODULE_PATHS.detailCCUpdateFieldConfig,
+							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
+							title: getPageTitle(PageType.Field),
+						},
+						{
+							path: MODULE_PATHS.detailCCUpdateFieldValidation,
 							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
 							title: getPageTitle(PageType.Field),
 						},

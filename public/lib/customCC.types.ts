@@ -5,6 +5,7 @@ import {
 	PresetDetailModel,
 	PresetListModel,
 } from '@redactie/content-types-module';
+import { ALERT_CONTAINER_IDS } from '@redactie/content-types-module/dist/lib/contentTypes.const';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
@@ -72,6 +73,7 @@ export interface Tab {
 	target: string;
 	active: boolean;
 	disabled?: boolean;
+	containerId: string;
 }
 
 export type FormikChildrenFn<Values = FormikValues> = (

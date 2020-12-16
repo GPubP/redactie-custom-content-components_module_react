@@ -1,12 +1,12 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { AlertContainer, LeavePrompt, useNavigate } from '@redactie/utils';
-import { path, pathOr } from 'ramda';
+import { o, path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AddCCForm, AddCCFormState } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
-import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
+import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 import { sortFieldTypes } from '../../helpers';
 
@@ -20,6 +20,7 @@ const DetailCCView: FC<DetailRouteProps> = ({
 	preset,
 	presets,
 	onCancel,
+	onSubmit,
 }) => {
 	const { presetUuid } = match.params;
 
@@ -70,11 +71,11 @@ const DetailCCView: FC<DetailRouteProps> = ({
 				: { name, fieldTypeUUID: selectedCC.uuid }
 		);
 
-		navigate(`${MODULE_PATHS.detailCCNewSettingsCC}`, { presetUuid }, {}, queryParams);
+		navigate(`${MODULE_PATHS.detailCCNewFieldSettings}`, { presetUuid }, {}, queryParams);
 	};
 
 	const onCCSave = (): void => {
-		// TODO: handle save
+		onSubmit(preset, CUSTOM_CC_DETAIL_TAB_MAP.contentComponents);
 	};
 
 	/**
@@ -84,15 +85,15 @@ const DetailCCView: FC<DetailRouteProps> = ({
 	const renderFieldsTable = (): ReactElement => {
 		const contentTypeRows: DetailCCRowData[] = (preset.data.fields || []).map(cc => ({
 			id: cc.field.uuid,
-			path: generatePath(MODULE_PATHS.detailCCEdit, {
+			path: generatePath(MODULE_PATHS.detailCCUpdateField, {
 				presetUuid,
 				contentComponentUuid: cc.field.uuid,
 			}),
 			label: cc.field.label,
 			name: cc.field.name,
 			fieldType:
-				(path(['preset', 'data', 'label'])(cc) as string | null) ||
-				pathOr('error', ['fieldType', 'data', 'label'])(cc),
+				(path(['preset', 'data', 'label'])(cc.field) as string | null) ||
+				pathOr('error', ['fieldType', 'data', 'label'])(cc.field),
 			multiple: Number(cc.field.generalConfig.max) > 1,
 			required: !!cc.field.generalConfig.required,
 			translatable: !!cc.field.generalConfig.multiLanguage,
@@ -100,7 +101,7 @@ const DetailCCView: FC<DetailRouteProps> = ({
 			// canMoveUp: canMoveUp(cc),
 			// canMoveDown: canMoveDown(cc),
 			navigate: () =>
-				navigate(MODULE_PATHS.detailCCEdit, {
+				navigate(MODULE_PATHS.detailCCUpdateField, {
 					presetUuid,
 					contentComponentUuid: cc.field.uuid,
 				}),

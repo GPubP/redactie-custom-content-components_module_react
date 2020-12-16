@@ -7,8 +7,8 @@ export const TENANT_ROOT = '/:tenantId';
 export const root = '/content-componenten';
 export const BASE_DETAIL_PATH = `${root}/:presetUuid`;
 export const DETAIL_CC_PATH = `${BASE_DETAIL_PATH}/content-componenten`;
-export const CC_NEW_PATH = `${DETAIL_CC_PATH}/aanmaken`;
-export const CC_EDIT_PATH = `${DETAIL_CC_PATH}/bewerken`;
+export const FIELD_NEW_PATH = `${DETAIL_CC_PATH}/aanmaken`;
+export const FIELD_UPDATE_PATH = `${DETAIL_CC_PATH}/:contentComponentUuid/bewerken`;
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
@@ -24,27 +24,33 @@ export const MODULE_PATHS = {
 	detailSettings: `${BASE_DETAIL_PATH}/instellingen`,
 	detailCC: DETAIL_CC_PATH,
 
-	detailCCNewCC: CC_NEW_PATH,
-	detailCCNewSettingsCC: `${CC_NEW_PATH}/instellingen`,
-	detailCCNewConfigCC: `${CC_NEW_PATH}/configuratie`,
-	detailCCNewValidationCC: `${CC_NEW_PATH}/validatie`,
+	detailCCNewField: FIELD_NEW_PATH,
+	detailCCNewFieldSettings: `${FIELD_NEW_PATH}/instellingen`,
+	detailCCNewFieldConfig: `${FIELD_NEW_PATH}/configuratie`,
+	detailCCNewFieldValidation: `${FIELD_NEW_PATH}/validatie`,
 
-	detailCCEdit: CC_EDIT_PATH,
+	detailCCUpdateField: FIELD_UPDATE_PATH,
+	detailCCUpdateFieldSettings: `${FIELD_UPDATE_PATH}/instellingen`,
+	detailCCUpdateFieldConfig: `${FIELD_UPDATE_PATH}/configuratie`,
+	detailCCUpdateFieldValidation: `${FIELD_UPDATE_PATH}/validatie`,
 };
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'custom-cc-create',
 	detailSettings: 'custom-cc-detail-settings',
 	detailCC: 'custom-cc-detail-cc',
+	detailCCNewField: 'custom-cc-detail-cc-new-field',
+	detailCCUpdateField: 'custom-cc-detail-cc-update-field',
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({
 	excludePaths: [
 		'/',
 		`${TENANT_ROOT}`,
-		`${TENANT_ROOT}/content-componenten`,
-		`${TENANT_ROOT}/content-componenten/aanmaken`,
-		`${TENANT_ROOT}/content-componenten/:presetUuid`,
+		`${TENANT_ROOT}${root}`,
+		`${TENANT_ROOT}${root}/aanmaken`,
+		`${TENANT_ROOT}${BASE_DETAIL_PATH}`,
+		`${TENANT_ROOT}${DETAIL_CC_PATH}/:contentComponentUuid`,
 	],
 	extraBreadcrumbs: [
 		{
@@ -63,13 +69,13 @@ export const CUSTOM_CC_DETAIL_TAB_MAP = {
 		name: 'Instellingen',
 		target: 'instellingen',
 		active: true,
-		// containerId: ALERT_CONTAINER_IDS.detailSettings,
+		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	contentComponents: {
 		name: 'Content Componenten',
 		target: 'content-componenten',
 		active: false,
-		// containerId: ALERT_CONTAINER_IDS.detailCC,
+		containerId: ALERT_CONTAINER_IDS.detailCC,
 	},
 };
 

@@ -1,29 +1,32 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
+	alertService,
 	DataLoader,
+	LeavePrompt,
 	RenderChildRoutes,
+	useDetectValueChangesWorker,
 	useNavigate,
 	useQuery,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { equals } from 'ramda';
+import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
-import { MODULE_PATHS } from '../../customCC.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps, PresetField } from '../../customCC.types';
 import { filterCompartments, generateFieldFromType } from '../../helpers';
 import { useActiveField, useCompartments, useCompartmentValidation } from '../../hooks';
 import { compartmentsFacade } from '../../store/compartments';
 import { uiFacade } from '../../store/ui';
 
-import { NEW_CC_COMPARTMENTS } from './DetailCCNewCC.const';
+import { NEW_FIELD_ALLOWED_PATHS, NEW_FIELD_COMPARTMENTS } from './DetailCCNewField.const';
 
-const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
+const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 	const { presetUuid } = match.params;
 	/**
 	 * Hooks
@@ -32,10 +35,10 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 	const location = useLocation<{ keepActiveField: boolean }>();
 	const queryParams = useQuery<{ fieldTypeUUID?: string; presetUUID?: string; name: string }>();
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
-	const [preset, presetUI] = contentTypesConnector.hooks.useActivePreset(queryParams.presetUUID);
+	const [preset, presetUI] = contentTypesConnector.hooks.usePreset(queryParams.presetUUID);
 	const [initialLoading, setInitialLoading] = useState(true);
 	const activeField = useActiveField();
-	const [fieldType, fieldTypeUI] = contentTypesConnector.hooks.useActiveFieldType(
+	const [fieldType, fieldTypeUI] = contentTypesConnector.hooks.useFieldType(
 		queryParams.presetUUID ? preset?.data.fieldType.uuid : queryParams.fieldTypeUUID
 	);
 	const { tenantId } = useTenantContext();
@@ -46,12 +49,12 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 	const locationState = location.state ?? {
 		keepActiveField: false,
 	};
-	const [
-		{ compartments, active: activeCompartment },
-		register,
-		activate,
-		setValid,
-	] = useCompartments();
+	const [hasChanges] = useDetectValueChangesWorker(
+		!initialLoading,
+		activeField,
+		BFF_MODULE_PUBLIC_PATH
+	);
+	const [{ compartments, active: activeCompartment }, register, activate] = useCompartments();
 	const navListItems = useMemo(
 		() =>
 			compartments.map(c => ({
@@ -85,7 +88,6 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 
 	// Loading
 	useEffect(() => {
-		console.log(activeField);
 		if (!fieldTypeUI?.isFetching && fieldType && !presetUI?.isFetching && !!activeField) {
 			return setInitialLoading(false);
 		}
@@ -97,7 +99,7 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 			return;
 		}
 
-		register(filterCompartments(NEW_CC_COMPARTMENTS, navItemMatcher), { replace: true });
+		register(filterCompartments(NEW_FIELD_COMPARTMENTS, navItemMatcher), { replace: true });
 
 		return () => {
 			compartmentsFacade.clearCompartments();
@@ -112,7 +114,6 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 				(fieldType && !preset && queryParams.fieldTypeUUID !== fieldType.uuid) ||
 				(preset && queryParams.presetUUID !== preset.uuid))
 		) {
-			console.log(fieldType, preset, queryParams);
 			uiFacade.clearActiveField();
 		}
 
@@ -127,7 +128,6 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 				name: kebabCase(queryParams.name || ''),
 				generalConfig: { guideline: fieldType.data.generalConfig.defaultGuideline || '' },
 			};
-			console.log('set active field');
 
 			uiFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
@@ -144,12 +144,45 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 		navigate(MODULE_PATHS.detailCC, { presetUuid });
 	};
 
-	const onCCSubmit = (): void => {
-		// test
+	const onFieldSubmit = (): void => {
+		if (!activeField) {
+			return;
+		}
+
+		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = compartmentsFacade.validate(activeField, {
+			fieldType,
+			preset,
+		});
+
+		// Validate current form to trigger fields error states
+		if (formikRef) {
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					formikRef.setErrors(errors);
+				}
+			});
+		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
+			// add field to preset store
+			contentTypesConnector.presetsFacade.addField(presetUuid, activeField);
+			uiFacade.clearActiveField();
+			navigateToDetailCC();
+		} else {
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: 'Lorem ipsum',
+				},
+				{ containerId: ALERT_CONTAINER_IDS.detailCCNewField }
+			);
+		}
+
 		setHasSubmit(true);
 	};
 
-	const onCCChange = (data: PresetField): void => {
+	const onFieldChange = (data: PresetField): void => {
 		compartmentsFacade.validate(data, {
 			fieldType,
 			preset,
@@ -166,12 +199,11 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 	}
 
 	const renderChildRoutes = (): ReactElement | null => {
-		console.log(initialLoading);
 		const extraOptions = {
 			CTField: activeField,
 			fieldType: activeField?.fieldType,
 			preset: preset,
-			onSubmit: onCCChange,
+			onSubmit: onFieldChange,
 			formikRef: (instance: FormikProps<FormikValues>) => {
 				if (!equals(activeCompartmentFormikRef.current, instance)) {
 					activeCompartmentFormikRef.current = instance;
@@ -188,7 +220,7 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 		);
 	};
 
-	const renderCCNew = (): ReactElement | null => (
+	const renderCCNewField = (): ReactElement | null => (
 		<>
 			<div className="u-margin-bottom-lg">
 				<div className="row between-xs top-xs">
@@ -209,22 +241,22 @@ const DetailCCNewCCView: FC<DetailRouteProps> = ({ route, match }) => {
 						<Button onClick={navigateToDetailCC} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
-						<Button className="u-margin-left-xs" onClick={onCCSubmit} type="success">
+						<Button className="u-margin-left-xs" onClick={onFieldSubmit} type="success">
 							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
-			{/* <LeavePrompt
-				allowedPaths={CC_NEW_ALLOWED_PATHS}
-				onConfirm={onCTSubmit}
+			<LeavePrompt
+				allowedPaths={NEW_FIELD_ALLOWED_PATHS}
+				onConfirm={onFieldSubmit}
 				shouldBlockNavigationOnConfirm
 				when={hasChanges}
-			/> */}
+			/>
 		</>
 	);
 
-	return <DataLoader loadingState={initialLoading} render={renderCCNew} />;
+	return <DataLoader loadingState={initialLoading} render={renderCCNewField} />;
 };
 
-export default DetailCCNewCCView;
+export default DetailCCNewFieldView;

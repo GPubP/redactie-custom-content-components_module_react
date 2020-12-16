@@ -3,6 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
+import { PresetDetailModel } from '@redactie/content-types-module';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	DataLoader,
@@ -17,7 +18,7 @@ import { Link } from 'react-router-dom';
 
 import { contentTypesConnector } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
-import { RouteProps, TabsLinkProps } from '../../customCC.types';
+import { RouteProps, Tab, TabsLinkProps } from '../../customCC.types';
 import { useActiveTabs } from '../../hooks';
 
 const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
@@ -43,7 +44,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const [activePreset] = contentTypesConnector.hooks.useActivePreset(presetUuid);
+	const [activePreset] = contentTypesConnector.hooks.usePreset(presetUuid);
 	const [presetsLoading, presets] = contentTypesConnector.hooks.usePresets();
 	const [, detailState] = (contentTypesConnector.hooks.usePresetsUIStates as any)(presetUuid);
 	const [fieldTypesLoading, fieldTypes] = contentTypesConnector.hooks.useFieldTypes();
@@ -99,6 +100,20 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 		navigate(MODULE_PATHS.overview);
 	};
 
+	const onSubmit = (data: PresetDetailModel, tab: Tab): void => {
+		contentTypesConnector.presetsFacade.updatePreset(
+			{
+				uuid: data.uuid,
+				body: {
+					data: data.data,
+				} as any,
+			},
+			{
+				alertContainerId: tab.containerId,
+			}
+		);
+	};
+
 	/**
 	 * Render
 	 */
@@ -110,6 +125,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			preset: activePreset,
 			presets,
 			onCancel,
+			onSubmit,
 		};
 
 		return (

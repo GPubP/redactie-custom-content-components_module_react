@@ -100,7 +100,7 @@ export const DETAIL_CC_COLUMNS = (
 ];
 
 export const DETAIL_CC_ALLOWED_PATHS = [
-	`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`,
-	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewCC}`,
-	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewSettingsCC}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCUpdateField}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewField}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewFieldSettings}`,
 ];
