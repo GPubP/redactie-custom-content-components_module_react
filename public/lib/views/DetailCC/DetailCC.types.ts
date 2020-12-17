@@ -8,7 +8,7 @@ export interface DetailCCRowData {
 	required: boolean;
 	translatable: boolean;
 	hidden: boolean;
-	// canMoveUp: canMoveUp(cc),
-	// canMoveDown: canMoveDown(cc),
+	canMoveUp: boolean;
+	canMoveDown: boolean;
 	navigate: () => void;
 }

@@ -55,6 +55,7 @@ const CreateView: FC<RouteProps> = ({ location, route }) => {
 		data: {
 			name: '',
 			label: '',
+			fieldType: '',
 			fields: [],
 			validators: [],
 		},

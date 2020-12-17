@@ -1,4 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
+import { Status } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { APIQueryParamsConfig } from '@redactie/utils';
 import React from 'react';
@@ -59,11 +60,10 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'active',
 		component(active: boolean) {
-			const activeClassName = active ? 'u-text-success' : 'u-text-danger';
 			const activeLabel = active
 				? t(CORE_TRANSLATIONS.STATUS_ACTIVE)
 				: t(CORE_TRANSLATIONS['STATUS_NON-ACTIVE']);
-			return <span className={activeClassName}>{activeLabel}</span>;
+			return <Status label={activeLabel} type={active ? 'ACTIVE' : 'INACTIVE'} />;
 		},
 	},
 	{
