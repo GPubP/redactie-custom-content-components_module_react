@@ -15,14 +15,21 @@ import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '..
 import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 
-const DetailSettingsView: FC<DetailRouteProps> = ({ allowedPaths, onCancel, onSubmit, preset }) => {
+const DetailSettingsView: FC<DetailRouteProps> = ({
+	allowedPaths,
+	onCancel,
+	onSubmit,
+	preset,
+	match,
+}) => {
+	const { presetUuid } = match.params;
 	const isUpdate = !!preset.uuid;
 
 	/**
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
-	const [listState, detailState] = contentTypesConnector.hooks.usePresetsUIStates();
+	const [listState, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
 
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(
@@ -60,7 +67,16 @@ const DetailSettingsView: FC<DetailRouteProps> = ({ allowedPaths, onCancel, onSu
 			});
 		}
 
-		onSubmit({ ...preset.data, ...value.data }, CUSTOM_CC_DETAIL_TAB_MAP.settings);
+		onSubmit(
+			{
+				...preset,
+				data: {
+					...preset.data,
+					...value.data,
+				},
+			},
+			CUSTOM_CC_DETAIL_TAB_MAP.settings
+		);
 		resetChangeDetection();
 	};
 

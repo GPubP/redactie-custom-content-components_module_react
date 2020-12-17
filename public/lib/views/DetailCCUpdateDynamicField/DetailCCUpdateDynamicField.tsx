@@ -133,6 +133,7 @@ const DetailCCUpdateDynamicFieldView: FC<DetailRouteProps> = ({
 
 		if (newActiveField) {
 			uiFacade.setActiveField(newActiveField.field);
+			dynamicFieldFacade.setDynamicField(newActiveField.field);
 		}
 	}, [activeField, activePreset.data.fields, contentComponentUuid]);
 
