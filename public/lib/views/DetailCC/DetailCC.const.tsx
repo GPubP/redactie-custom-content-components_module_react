@@ -1,4 +1,4 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Button, ButtonGroup } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { isNil } from 'ramda';
 import React from 'react';
@@ -13,20 +13,47 @@ import { DetailCCRowData } from './DetailCC.types';
 
 export const DETAIL_CC_COLUMNS = (
 	t: TranslateFunc,
-	onExpand: (id: string) => void = () => null
-	// moveRow: (uuid: string, action: MoveAction) => void = () => null
+	moveRow: (uuid: string, indexUpdate: number) => void = () => null
 ): TableColumn<DetailCCRowData>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
 		component(value: string, rowData: DetailCCRowData) {
-			const { path } = rowData;
+			const { name, path } = rowData;
 			return (
-				<>
-					{path ? <Link to={path}>{value}</Link> : <p className="u-text-bold">{value}</p>}
-					{rowData.name && <p className="u-text-light">systeemnaam: [{rowData.name}]</p>}
-				</>
+				<div className="u-flex u-flex-align-center u-flex-no-wrap">
+					<ButtonGroup direction="vertical">
+						<Button
+							ariaLabel="Move item up"
+							disabled={!rowData.canMoveUp}
+							htmlType="button"
+							icon="chevron-up"
+							negative
+							onClick={() => moveRow(rowData.id, -1)}
+							size="tiny"
+							transparent
+						/>
+						<Button
+							ariaLabel="Move item down"
+							disabled={!rowData.canMoveDown}
+							htmlType="button"
+							icon="chevron-down"
+							negative
+							onClick={() => moveRow(rowData.id, 1)}
+							size="tiny"
+							transparent
+						/>
+					</ButtonGroup>
+					<div className="u-margin-left-xs">
+						{path ? (
+							<Link to={path}>{value}</Link>
+						) : (
+							<p className="u-text-bold">{value}</p>
+						)}
+						{name && <p className="u-text-light">systeemnaam: [{name}]</p>}
+					</div>
+				</div>
 			);
 		},
 	},
@@ -86,11 +113,7 @@ export const DETAIL_CC_COLUMNS = (
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() =>
-						rowData.navigate && typeof rowData.navigate === 'function'
-							? rowData.navigate()
-							: onExpand(rowData.id)
-					}
+					onClick={rowData.navigate}
 					type="primary"
 					transparent
 				/>

@@ -1,7 +1,7 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { AlertContainer, LeavePrompt, useNavigate } from '@redactie/utils';
-import { o, path, pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AddCCForm, AddCCFormState } from '../../components';
@@ -78,40 +78,61 @@ const DetailCCView: FC<DetailRouteProps> = ({
 		onSubmit(preset, CUSTOM_CC_DETAIL_TAB_MAP.contentComponents);
 	};
 
+	const onMoveRow = (fieldUuid: string, indexUpdate: number): void => {
+		const fromIndex = (preset?.data?.fields || []).findIndex(p => p.field.uuid === fieldUuid);
+		const toIndex = fromIndex + indexUpdate;
+
+		(contentTypesConnector.presetsFacade as any).moveField(presetUuid, fromIndex, toIndex);
+	};
+
+	const onMoveRowDnD = (source: any, target: any): void => {
+		if (source.index !== target.index) {
+			(contentTypesConnector.presetsFacade as any).moveField(
+				presetUuid,
+				source.index,
+				target.index
+			);
+		}
+	};
+
 	/**
 	 * Render
 	 */
 
 	const renderFieldsTable = (): ReactElement => {
-		const contentTypeRows: DetailCCRowData[] = (preset.data.fields || []).map(cc => ({
-			id: cc.field.uuid,
-			path: generatePath(MODULE_PATHS.detailCCUpdateField, {
-				presetUuid,
-				contentComponentUuid: cc.field.uuid,
-			}),
-			label: cc.field.label,
-			name: cc.field.name,
-			fieldType:
-				(path(['preset', 'data', 'label'])(cc.field) as string | null) ||
-				pathOr('error', ['fieldType', 'data', 'label'])(cc.field),
-			multiple: Number(cc.field.generalConfig.max) > 1,
-			required: !!cc.field.generalConfig.required,
-			translatable: !!cc.field.generalConfig.multiLanguage,
-			hidden: !!cc.field.generalConfig.hidden,
-			// canMoveUp: canMoveUp(cc),
-			// canMoveDown: canMoveDown(cc),
-			navigate: () =>
-				navigate(MODULE_PATHS.detailCCUpdateField, {
+		const contentTypeRows: DetailCCRowData[] = (preset?.data?.fields || []).map(
+			(cc, index, arr) => ({
+				id: cc.field.uuid,
+				path: generatePath(MODULE_PATHS.detailCCUpdateField, {
 					presetUuid,
 					contentComponentUuid: cc.field.uuid,
 				}),
-		}));
+				label: cc.field.label,
+				name: cc.field.name,
+				fieldType:
+					(path(['preset', 'data', 'label'])(cc.field) as string | null) ||
+					pathOr('error', ['fieldType', 'data', 'label'])(cc.field),
+				multiple: Number(cc.field.generalConfig.max) > 1,
+				required: !!cc.field.generalConfig.required,
+				translatable: !!cc.field.generalConfig.multiLanguage,
+				hidden: !!cc.field.generalConfig.hidden,
+				canMoveUp: index !== 0,
+				canMoveDown: index < arr.length - 1,
+				navigate: () =>
+					navigate(MODULE_PATHS.detailCCUpdateField, {
+						presetUuid,
+						contentComponentUuid: cc.field.uuid,
+					}),
+			})
+		);
 
 		return (
 			<Table
 				dataKey="id"
+				draggable
 				className="u-margin-top"
-				columns={DETAIL_CC_COLUMNS(t)}
+				columns={DETAIL_CC_COLUMNS(t, onMoveRow)}
+				moveRow={onMoveRowDnD}
 				rows={contentTypeRows}
 				totalValues={preset.data.fields.length}
 			/>
