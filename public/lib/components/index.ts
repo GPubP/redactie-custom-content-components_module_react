@@ -1,3 +1,3 @@
 export * from './Forms';
 export * from './StatusIcon';
-export * from './ActivePresetBreadCrumb';
+export * from './BreadCrumbs';

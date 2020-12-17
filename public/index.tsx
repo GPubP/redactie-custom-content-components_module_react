@@ -2,7 +2,7 @@ import Core from '@redactie/redactie-core';
 import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
-import { ActivePresetBreadCrumb } from './lib/components';
+import { DynamicFieldBreadCrumb, PresetBreadCrumb } from './lib/components';
 import { contentTypesConnector } from './lib/connectors';
 import { CONTEXT_HEADER_ROUTE_BAGES, MODULE_PATHS } from './lib/customCC.const';
 import { ModuleProps, PageType } from './lib/customCC.types';
@@ -64,7 +64,7 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCNewDynamicField,
-					breadcrumb: null,
+					breadcrumb: DynamicFieldBreadCrumb,
 					component: DetailCCNewDynamicFieldView,
 					redirect: MODULE_PATHS.detailCCNewDynamicFieldSettings,
 					routes: [
@@ -90,7 +90,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCUpdateDynamicField,
-					breadcrumb: null,
+					breadcrumb: DynamicFieldBreadCrumb,
 					component: DetailCCUpdateDynamicFieldView,
 					redirect: MODULE_PATHS.detailCCUpdateDynamicFieldSettings,
 					routes: [
@@ -174,7 +174,7 @@ Core.routes.register({
 				{
 					path: MODULE_PATHS.detailCC,
 					component: DetailCCView,
-					breadcrumb: ActivePresetBreadCrumb,
+					breadcrumb: PresetBreadCrumb,
 					title: getPageTitle(PageType.Preset),
 					badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 				},

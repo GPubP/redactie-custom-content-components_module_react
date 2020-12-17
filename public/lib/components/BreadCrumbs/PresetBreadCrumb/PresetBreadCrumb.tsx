@@ -1,11 +1,11 @@
+import { Breadcrumb } from '@redactie/redactie-core';
 import { useObservable } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 
-import { contentTypesConnector } from '../../connectors';
+import { contentTypesConnector } from '../../../connectors';
 
-const ActivePresetBreadCrumb: FC = () => {
-	const { presetUuid } = useParams<{ presetUuid: string }>();
+const PresetBreadCrumb: FC<Breadcrumb> = ({ match }) => {
+	const { presetUuid } = match?.params || {};
 
 	const presetObservable = useMemo(
 		() => contentTypesConnector.presetsFacade.selectPreset(presetUuid),
@@ -16,4 +16,4 @@ const ActivePresetBreadCrumb: FC = () => {
 	return preset?.data.label ? <>{preset.data.label}</> : null;
 };
 
-export default ActivePresetBreadCrumb;
+export default PresetBreadCrumb;

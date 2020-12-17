@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import { contentTypesConnector } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
 import { RouteProps, Tab, TabsLinkProps } from '../../customCC.types';
-import { useActiveTabs } from '../../hooks';
+import { useActiveField, useActiveTabs, useDynamicField } from '../../hooks';
 
 const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	const { presetUuid } = match.params;
@@ -44,6 +44,8 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
+	const dynamicField = useDynamicField();
+	const activeField = useActiveField();
 	const [activePreset] = contentTypesConnector.hooks.usePreset(presetUuid);
 	const [presetsLoading, presets] = contentTypesConnector.hooks.usePresets();
 	const [, detailState] = (contentTypesConnector.hooks.usePresetsUIStates as any)(presetUuid);
@@ -59,8 +61,8 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			return;
 		}
 
-		return activeRouteConfig.title(activePreset);
-	}, [activePreset, activeRouteConfig]);
+		return activeRouteConfig.title(activePreset, activeField, dynamicField);
+	}, [activeField, activePreset, activeRouteConfig, dynamicField]);
 
 	// Fetch fieldTypes and presets
 	useEffect(() => {

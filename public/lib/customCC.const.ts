@@ -66,6 +66,8 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		`${TENANT_ROOT}${root}/aanmaken`,
 		`${TENANT_ROOT}${BASE_DETAIL_PATH}`,
 		`${TENANT_ROOT}${DETAIL_CC_PATH}/:contentComponentUuid`,
+		`${TENANT_ROOT}${DYNAMIC_FIELD_BASE_PATH}`,
+		`${TENANT_ROOT}${DYNAMIC_FIELD_BASE_PATH}/:dynamicContentComponentUuid`,
 	],
 	extraBreadcrumbs: [
 		{
