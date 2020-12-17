@@ -148,6 +148,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 					component: Link,
 				})}
 				tabs={showTabs && activeTabs}
+				badges={activeRouteConfig && activeRouteConfig.badges}
 				title={pageTitle}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
