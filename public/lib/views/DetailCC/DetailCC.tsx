@@ -82,16 +82,12 @@ const DetailCCView: FC<DetailRouteProps> = ({
 		const fromIndex = (preset?.data?.fields || []).findIndex(p => p.field.uuid === fieldUuid);
 		const toIndex = fromIndex + indexUpdate;
 
-		(contentTypesConnector.presetsFacade as any).moveField(presetUuid, fromIndex, toIndex);
+		contentTypesConnector.presetsFacade.moveField(presetUuid, fromIndex, toIndex);
 	};
 
 	const onMoveRowDnD = (source: any, target: any): void => {
 		if (source.index !== target.index) {
-			(contentTypesConnector.presetsFacade as any).moveField(
-				presetUuid,
-				source.index,
-				target.index
-			);
+			contentTypesConnector.presetsFacade.moveField(presetUuid, source.index, target.index);
 		}
 	};
 
