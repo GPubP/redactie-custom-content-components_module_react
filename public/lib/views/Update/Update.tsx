@@ -48,10 +48,10 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	const activeField = useActiveField();
 	const [activePreset] = contentTypesConnector.hooks.usePreset(presetUuid);
 	const [presetsLoading, presets] = contentTypesConnector.hooks.usePresets();
-	const [, detailState] = (contentTypesConnector.hooks.usePresetsUIStates as any)(presetUuid);
+	const [, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
 	const [fieldTypesLoading, fieldTypes] = contentTypesConnector.hooks.useFieldTypes();
 	const [fieldsHaveChanged] = useDetectValueChangesWorker(
-		detailState && !detailState.isFetching,
+		!detailState?.isFetching,
 		activePreset?.data?.fields,
 		BFF_MODULE_PUBLIC_PATH
 	);
