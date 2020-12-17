@@ -1,37 +1,40 @@
-import { CreatePresetPayload, PresetDetailModel } from '@redactie/content-types-module';
-import { FieldType } from '@redactie/content-types-module/dist/lib/services/fieldTypes';
-import { Preset } from '@redactie/content-types-module/dist/lib/services/presets';
+import {
+	CreatePresetPayload,
+	FieldTypeListModel,
+	PresetDetailModel,
+	PresetListModel,
+} from '@redactie/content-types-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
-export interface CustomCCModuleProps<Params extends { [K in keyof Params]?: string } = {}>
+export interface ModuleProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 	tenantId: string;
 }
 
-export interface CustomCCRouteParams {
+export interface RouteParams {
 	presetUuid: string;
 }
 
-export interface CustomCCRouteProps<Params = CustomCCRouteParams>
-	extends RouteConfigComponentProps<Params> {
+export interface RouteProps<Params = RouteParams> extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 }
 
 export interface CustomCCDetailRouteParams {
 	presetUuid: string;
 	contentComponentUuid: string;
+	dynamicContentComponentUuid: string;
 }
 
-export interface CustomCCDetailRouteProps<Params = CustomCCDetailRouteParams>
+export interface DetailRouteProps<Params = CustomCCDetailRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	readonly allowedPaths?: string[];
 	readonly fieldsHaveChanged: boolean;
-	readonly fieldTypes: FieldType[];
+	readonly fieldTypes: FieldTypeListModel[];
 	readonly preset: PresetDetailModel;
-	readonly presets: Preset[];
+	readonly presets: PresetListModel[];
 	onCancel: () => void;
 	onSubmit: (data: CreatePresetPayload['data'] | PresetDetailModel, tab: Tab) => void;
 }
@@ -69,6 +72,7 @@ export interface Tab {
 	target: string;
 	active: boolean;
 	disabled?: boolean;
+	containerId: string;
 }
 
 export type FormikChildrenFn<Values = FormikValues> = (
@@ -83,4 +87,9 @@ export interface SelectOption {
 
 export interface TabsLinkProps {
 	href: string;
+}
+
+export interface ContextHeaderBadge {
+	name: string;
+	type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 }
