@@ -16,9 +16,7 @@ const DynamicFieldBreadCrumb: FC<Breadcrumb> = ({ match }) => {
 				{dynamicField.label}
 			</Link>
 		</>
-	) : (
-		<>bla</>
-	);
+	) : null;
 };
 
 export default DynamicFieldBreadCrumb;
