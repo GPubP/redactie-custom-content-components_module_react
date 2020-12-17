@@ -1,6 +1,10 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { PresetDetailFieldModel } from '@redactie/content-types-module';
+import {
+	PresetDetailFieldModel,
+	PresetDetailModel,
+	PresetListModel,
+} from '@redactie/content-types-module';
 import {
 	AlertContainer,
 	alertService,
@@ -12,7 +16,7 @@ import {
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
-import { equals, isEmpty } from 'ramda';
+import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -24,38 +28,45 @@ import {
 	useActiveField,
 	useCompartments,
 	useCompartmentValidation,
+	useDynamicActiveField,
 	useDynamicField,
 } from '../../hooks';
 import { compartmentsFacade } from '../../store/compartments';
 import { dynamicFieldFacade } from '../../store/dynamicField';
 import { uiFacade } from '../../store/ui';
 
-import { UPDATE_FIELD_ALLOWED_PATHS, UPDATE_FIELD_COMPARTMENTS } from './DetailCCUpdateField.const';
+import {
+	UPDATE_DYNAMIC_FIELD_ALLOWED_PATHS,
+	UPDATE_DYNAMIC_FIELD_COMPARTMENTS,
+} from './DetailCCUpdateDynamicField.const';
 
-const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePreset, route }) => {
-	const { presetUuid, contentComponentUuid } = match.params;
+const DetailCCUpdateDynamicFieldView: FC<DetailRouteProps> = ({
+	match,
+	route,
+	preset: activePreset,
+}) => {
+	const { presetUuid, contentComponentUuid, dynamicContentComponentUuid } = match.params;
 
 	/**
 	 * Hooks
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(true);
-	const [invalidCCUuid, setInvalidCCUuid] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
+	const dynamicActiveField = useDynamicActiveField();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
-	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
-	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
-	const [fieldType, fieldTypeUI] = contentTypesConnector.hooks.useFieldType(activeFieldFTUuid);
-	const [preset, presetUI] = contentTypesConnector.hooks.usePreset(activeFieldPSUuid);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
-	const navItemMatcher = contentTypesConnector.hooks.useNavItemMatcher(preset, fieldType);
+	const navItemMatcher = contentTypesConnector.hooks.useNavItemMatcher(
+		dynamicActiveField?.preset as PresetDetailModel,
+		dynamicActiveField?.fieldType
+	);
 	const [hasChanges] = useDetectValueChangesWorker(
 		!initialLoading,
-		activeField,
+		dynamicActiveField,
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [{ compartments, active: activeCompartment }, register, activate] = useCompartments();
@@ -64,87 +75,146 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(c.slug || c.name, { presetUuid, contentComponentUuid }),
+		to: generatePath(c.slug || c.name, {
+			presetUuid,
+			contentComponentUuid,
+			dynamicContentComponentUuid,
+		}),
 	}));
+	console.log(dynamicField);
 
 	/**
 	 * Trigger errors on form when switching from compartments
 	 */
 	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
 
-	// Loading
+	/**
+	 * Loading
+	 */
 	useEffect(() => {
-		if (!fieldTypeUI?.isFetching && fieldType && !presetUI?.isFetching && !!activeField) {
+		if (activeField) {
 			return setInitialLoading(false);
 		}
-	}, [fieldTypeUI, presetUI, activeField, fieldType]);
 
-	// Set compartments
+		setInitialLoading(true);
+	}, [activeField]);
+
+	/**
+	 * Set compartments
+	 */
 	useEffect(() => {
-		if (!fieldType) {
+		if (!activeField) {
 			return;
 		}
 
-		register(filterCompartments(UPDATE_FIELD_COMPARTMENTS, navItemMatcher), { replace: true });
+		register(filterCompartments(UPDATE_DYNAMIC_FIELD_COMPARTMENTS, navItemMatcher), {
+			replace: true,
+		});
 
 		return () => {
 			compartmentsFacade.clearCompartments();
 		};
-	}, [fieldType, navItemMatcher]); // eslint-disable-line
+	}, [activeField, navItemMatcher]); // eslint-disable-line
 
+	/**
+	 * Set active field
+	 */
 	useEffect(() => {
-		const presetFields = activePreset.data.fields;
 		if (
 			!contentComponentUuid ||
-			!Array.isArray(presetFields) ||
-			(activeField && activeField?.uuid === contentComponentUuid)
+			!Array.isArray(activePreset.data.fields) ||
+			(activeField && activeField.uuid === contentComponentUuid)
 		) {
 			return;
 		}
 
-		const newActiveField = presetFields.find(
+		const newActiveField = activePreset.data.fields.find(
 			field => field.field.uuid === contentComponentUuid
 		);
 
 		if (newActiveField) {
 			uiFacade.setActiveField(newActiveField.field);
-		} else {
-			setInvalidCCUuid(true);
 		}
-	}, [activeField, activeFieldFTUuid, activePreset.data.fields, contentComponentUuid]);
+	}, [activeField, activePreset.data.fields, contentComponentUuid]);
+
+	/**
+	 * Set dynamic active field
+	 */
+	useEffect(() => {
+		if (
+			!dynamicContentComponentUuid ||
+			!Array.isArray(dynamicField?.config?.fields) ||
+			dynamicActiveField?.uuid === dynamicContentComponentUuid ||
+			!dynamicField
+		) {
+			return;
+		}
+
+		const field = (dynamicField?.config?.fields || []).find(
+			f => f.uuid === dynamicContentComponentUuid
+		);
+
+		if (!field) {
+			return;
+		}
+
+		dynamicFieldFacade.setActiveField(field);
+	}, [dynamicContentComponentUuid, activeField, dynamicActiveField, dynamicField]);
 
 	/**
 	 * Methods
 	 */
-	const navigateToDetailCC = (): void => {
-		navigate(MODULE_PATHS.detailCC, { presetUuid });
+	const navigateToDetail = (): void => {
+		navigate(
+			activeField?.__new
+				? MODULE_PATHS.detailCCNewFieldConfig
+				: MODULE_PATHS.detailCCUpdateFieldConfig,
+			{ presetUuid, contentComponentUuid },
+			{
+				// This will keep the current active field (paragraaf) in state when we redirect.
+				// Changes made to the configuration of this field will not be overwritten
+				keepActiveField: !!activeField?.__new,
+			},
+			new URLSearchParams(
+				activeField?.__new
+					? {
+							fieldType: activeField.fieldType.uuid,
+							name: activeField.label,
+					  }
+					: {}
+			)
+		);
 	};
 
 	const onFieldChange = (data: PresetDetailFieldModel): void => {
 		compartmentsFacade.validate(data, {
-			fieldType,
-			preset,
+			fieldType: dynamicActiveField?.fieldType,
+			preset: (dynamicActiveField?.preset as unknown) as PresetListModel,
 		});
-		uiFacade.updateActiveField(data);
+		dynamicFieldFacade.updateActiveField({
+			...data,
+		});
 	};
 
 	const onFieldDelete = (): void => {
-		if (activeField?.uuid) {
-			contentTypesConnector.presetsFacade.deleteField(presetUuid, activeField.uuid);
-			uiFacade.clearActiveField();
-			navigateToDetailCC();
+		if (!dynamicActiveField?.uuid) {
+			return;
 		}
+
+		dynamicFieldFacade.deleteField(dynamicActiveField.uuid);
+		dynamicFieldFacade.clearActiveField();
+		navigateToDetail();
 	};
 
 	const onFieldSubmit = (): void => {
-		if (!activeField) {
+		if (!dynamicActiveField) {
 			return;
 		}
 
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = compartmentsFacade.validate(activeField, {
-			fieldType,
-			preset,
+		const compartmentsAreValid = compartmentsFacade.validate(dynamicActiveField, {
+			fieldType: dynamicActiveField?.fieldType,
+			preset: (dynamicActiveField?.preset as unknown) as PresetListModel,
 		});
 
 		// Validate current form to trigger fields error states
@@ -157,55 +227,36 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 		}
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
-			contentTypesConnector.presetsFacade.updateField(presetUuid, activeField);
-			uiFacade.clearActiveField();
-			navigateToDetailCC();
+			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
+			navigateToDetail();
 		} else {
 			alertService.danger(
 				{
 					title: 'Er zijn nog fouten',
 					message: '',
 				},
-				{ containerId: ALERT_CONTAINER_IDS.detailCCUpdateField }
+				{ containerId: ALERT_CONTAINER_IDS.detailCCUpdateDynamicField }
 			);
 		}
 
-		setHasSubmit(true);
+		setHasSubmit(false);
 	};
 
 	/**
 	 * Render
 	 */
+	const renderChildRoutes = (): ReactElement | void => {
+		if (!dynamicActiveField) {
+			return;
+		}
 
-	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
-			CTField: activeField,
-			fieldType,
-			preset,
-			dynamicFieldSettingsContext: {
-				dynamicField,
-				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) =>
-					generatePath(
-						MODULE_PATHS.detailCCNewDynamicFieldSettings,
-						{
-							presetUuid,
-							contentComponentUuid: activeField?.uuid,
-						},
-						new URLSearchParams(
-							isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
-						)
-					),
-				getEditPath: (uuid: string) =>
-					generatePath(MODULE_PATHS.detailCCUpdateDynamicFieldSettings, {
-						presetUuid,
-						contentComponentUuid: activeField?.uuid,
-						dynamicContentComponentUuid: uuid,
-					}),
-				setDynamicField: dynamicFieldFacade.setDynamicField.bind(dynamicFieldFacade),
-			},
+			CTField: dynamicActiveField,
+			fieldType: dynamicActiveField?.fieldType,
+			preset: dynamicActiveField?.preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
-			formikRef: (instance: FormikProps<FormikValues>) => {
+			formikRef: (instance: any) => {
 				if (!equals(activeCompartmentFormikRef.current, instance)) {
 					activeCompartmentFormikRef.current = instance;
 				}
@@ -221,12 +272,12 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 		);
 	};
 
-	const renderCCUpdateField = (): ReactElement | null => {
+	const renderCCEdit = (): ReactElement | null => {
 		return (
 			<>
 				<AlertContainer
 					toastClassName="u-margin-bottom"
-					containerId={ALERT_CONTAINER_IDS.detailCCUpdateField}
+					containerId={ALERT_CONTAINER_IDS.detailCCUpdateDynamicField}
 				/>
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
@@ -244,21 +295,21 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToDetailCC} negative>
+							<Button onClick={navigateToDetail} negative>
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							<Button
 								className="u-margin-left-xs"
 								onClick={onFieldSubmit}
-								type="success"
+								type="primary"
 							>
-								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 							</Button>
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
 				<LeavePrompt
-					allowedPaths={UPDATE_FIELD_ALLOWED_PATHS}
+					allowedPaths={UPDATE_DYNAMIC_FIELD_ALLOWED_PATHS}
 					onConfirm={onFieldSubmit}
 					shouldBlockNavigationOnConfirm
 					when={hasChanges}
@@ -266,23 +317,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 			</>
 		);
 	};
-
-	return (
-		<>
-			{!invalidCCUuid ? (
-				<DataLoader loadingState={initialLoading} render={renderCCUpdateField} />
-			) : (
-				<div>
-					<p className="u-margin-top-xs u-margin-bottom">
-						De content component kan niet worden geladen. Probeer later opnieuw.
-					</p>
-					<Button onClick={navigateToDetailCC} outline>
-						{t(CORE_TRANSLATIONS['BUTTON_BACK-TO-OVERVIEW'])}
-					</Button>
-				</div>
-			)}
-		</>
-	);
+	return <DataLoader loadingState={initialLoading} render={renderCCEdit} />;
 };
 
-export default DetailCCUpdateFieldView;
+export default DetailCCUpdateDynamicFieldView;

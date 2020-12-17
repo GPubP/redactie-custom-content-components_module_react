@@ -48,4 +48,8 @@ export const NEW_FIELD_ALLOWED_PATHS = [
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewFieldSettings}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewFieldConfig}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewFieldValidation}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewDynamicField}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewDynamicFieldSettings}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCUpdateDynamicField}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCUpdateDynamicFieldSettings}`,
 ];

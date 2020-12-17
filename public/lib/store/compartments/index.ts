@@ -6,5 +6,5 @@ export const {
 	store: compartmentsStore,
 	facade: compartmentsFacade,
 	query: compartmentsQuery,
-} = dynamicCompartmentsFactory.createStore<CompartmentsState>('CCC');
+} = dynamicCompartmentsFactory.createStore<CompartmentsState>('ccc');
 export * from './compartments.model';

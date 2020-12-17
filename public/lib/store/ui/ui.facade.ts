@@ -1,4 +1,4 @@
-import { PresetField } from '../../customCC.types';
+import { PresetDetailFieldModel } from '@redactie/content-types-module';
 
 import { uiQuery, UIQuery } from './ui.query';
 import { uiStore, UIStore } from './ui.store';
@@ -12,19 +12,19 @@ export class UIFacade {
 	 * Active Field actions
 	 */
 
-	public getActiveField(): PresetField | null {
+	public getActiveField(): PresetDetailFieldModel | null {
 		const { activeField } = this.store.getValue();
 
 		return activeField || null;
 	}
 
-	public setActiveField(payload: PresetField): void {
+	public setActiveField(payload: PresetDetailFieldModel): void {
 		this.store.update({
 			activeField: payload,
 		});
 	}
 
-	public updateActiveField(payload: Partial<PresetField>): void {
+	public updateActiveField(payload: Partial<PresetDetailFieldModel>): void {
 		const { activeField } = this.store.getValue();
 
 		if (!activeField) {
@@ -60,7 +60,7 @@ export class UIFacade {
 					: payload.defaultValue !== undefined
 					? payload.defaultValue
 					: activeField.defaultValue,
-			} as PresetField,
+			} as PresetDetailFieldModel,
 		});
 	}
 

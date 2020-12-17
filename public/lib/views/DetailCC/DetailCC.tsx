@@ -66,9 +66,9 @@ const DetailCCView: FC<DetailRouteProps> = ({
 			selectedCC.isPreset
 				? {
 						name,
-						presetUUID: selectedCC.uuid,
+						preset: selectedCC.uuid,
 				  }
-				: { name, fieldTypeUUID: selectedCC.uuid }
+				: { name, fieldType: selectedCC.uuid }
 		);
 
 		navigate(`${MODULE_PATHS.detailCCNewFieldSettings}`, { presetUuid }, {}, queryParams);

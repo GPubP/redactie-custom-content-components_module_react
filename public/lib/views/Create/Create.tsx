@@ -67,8 +67,12 @@ const CreateView: FC<RouteProps> = ({ location, route }) => {
 				name: kebabCase(sectionData.label),
 				// TODO: remove this once default fieldType api call is available
 				fieldType: '5e848366b88e3f0122747224',
+				// TODO: remove type cast when CreatePresetPayload Type allows strings
+				validators: ([
+					'5f58997bb2395600093174a1',
+				] as unknown) as CreatePresetPayload['data']['validators'],
 			},
-		} as CreatePresetPayload;
+		};
 
 		contentTypesConnector.presetsFacade
 			.createPreset(payload, {

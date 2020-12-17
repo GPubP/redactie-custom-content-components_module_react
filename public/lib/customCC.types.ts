@@ -5,7 +5,6 @@ import {
 	PresetDetailModel,
 	PresetListModel,
 } from '@redactie/content-types-module';
-import { ALERT_CONTAINER_IDS } from '@redactie/content-types-module/dist/lib/contentTypes.const';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
@@ -27,6 +26,7 @@ export interface RouteProps<Params = RouteParams> extends RouteConfigComponentPr
 export interface CustomCCDetailRouteParams {
 	presetUuid: string;
 	contentComponentUuid: string;
+	dynamicContentComponentUuid: string;
 }
 
 export interface DetailRouteProps<Params = CustomCCDetailRouteParams>
@@ -89,5 +89,3 @@ export interface SelectOption {
 export interface TabsLinkProps {
 	href: string;
 }
-
-export type PresetField = Omit<Field, 'compartment'>;

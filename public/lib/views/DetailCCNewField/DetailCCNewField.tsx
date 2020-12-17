@@ -1,6 +1,8 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
+import { PresetDetailFieldModel } from '@redactie/content-types-module';
 import {
+	AlertContainer,
 	alertService,
 	DataLoader,
 	LeavePrompt,
@@ -18,10 +20,16 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
-import { DetailRouteProps, PresetField } from '../../customCC.types';
+import { DetailRouteProps } from '../../customCC.types';
 import { filterCompartments, generateFieldFromType } from '../../helpers';
-import { useActiveField, useCompartments, useCompartmentValidation } from '../../hooks';
+import {
+	useActiveField,
+	useCompartments,
+	useCompartmentValidation,
+	useDynamicField,
+} from '../../hooks';
 import { compartmentsFacade } from '../../store/compartments';
+import { dynamicFieldFacade } from '../../store/dynamicField';
 import { uiFacade } from '../../store/ui';
 
 import { NEW_FIELD_ALLOWED_PATHS, NEW_FIELD_COMPARTMENTS } from './DetailCCNewField.const';
@@ -33,13 +41,14 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const location = useLocation<{ keepActiveField: boolean }>();
-	const queryParams = useQuery<{ fieldTypeUUID?: string; presetUUID?: string; name: string }>();
+	const queryParams = useQuery<{ fieldType?: string; preset?: string; name: string }>();
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
-	const [preset, presetUI] = contentTypesConnector.hooks.usePreset(queryParams.presetUUID);
+	const dynamicField = useDynamicField();
+	const [preset, presetUI] = contentTypesConnector.hooks.usePreset(queryParams.preset);
 	const [initialLoading, setInitialLoading] = useState(true);
 	const activeField = useActiveField();
 	const [fieldType, fieldTypeUI] = contentTypesConnector.hooks.useFieldType(
-		queryParams.presetUUID ? preset?.data.fieldType.uuid : queryParams.fieldTypeUUID
+		queryParams.preset ? preset?.data.fieldType.uuid : queryParams.fieldType
 	);
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -111,8 +120,8 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 		if (
 			!locationState.keepActiveField &&
 			((!fieldType && !preset) ||
-				(fieldType && !preset && queryParams.fieldTypeUUID !== fieldType.uuid) ||
-				(preset && queryParams.presetUUID !== preset.uuid))
+				(fieldType && !preset && queryParams.fieldType !== fieldType.uuid) ||
+				(preset && queryParams.preset !== preset.uuid))
 		) {
 			uiFacade.clearActiveField();
 		}
@@ -173,7 +182,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 			alertService.danger(
 				{
 					title: 'Er zijn nog fouten',
-					message: 'Lorem ipsum',
+					message: '',
 				},
 				{ containerId: ALERT_CONTAINER_IDS.detailCCNewField }
 			);
@@ -182,7 +191,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 		setHasSubmit(true);
 	};
 
-	const onFieldChange = (data: PresetField): void => {
+	const onFieldChange = (data: PresetDetailFieldModel): void => {
 		compartmentsFacade.validate(data, {
 			fieldType,
 			preset,
@@ -194,7 +203,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 	 * Render
 	 */
 
-	if (!(queryParams.fieldTypeUUID || queryParams.presetUUID) || !queryParams.name) {
+	if (!(queryParams.fieldType || queryParams.preset) || !queryParams.name) {
 		navigateToDetailCC();
 	}
 
@@ -203,6 +212,40 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 			CTField: activeField,
 			fieldType: activeField?.fieldType,
 			preset: preset,
+			dynamicFieldSettingsContext: {
+				dynamicField,
+				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) => {
+					console.log(
+						generatePath(
+							MODULE_PATHS.detailCCNewDynamicFieldSettings,
+							{
+								presetUuid,
+								contentComponentUuid: activeField?.uuid,
+							},
+							new URLSearchParams(
+								isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
+							)
+						)
+					);
+					return generatePath(
+						MODULE_PATHS.detailCCNewDynamicFieldSettings,
+						{
+							presetUuid,
+							contentComponentUuid: activeField?.uuid,
+						},
+						new URLSearchParams(
+							isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
+						)
+					);
+				},
+				getEditPath: (uuid: string) =>
+					generatePath(MODULE_PATHS.detailCCUpdateDynamicFieldSettings, {
+						presetUuid,
+						contentComponentUuid: activeField?.uuid,
+						dynamicContentComponentUuid: uuid,
+					}),
+				setDynamicField: dynamicFieldFacade.setDynamicField.bind(dynamicFieldFacade),
+			},
 			onSubmit: onFieldChange,
 			formikRef: (instance: FormikProps<FormikValues>) => {
 				if (!equals(activeCompartmentFormikRef.current, instance)) {
@@ -222,6 +265,10 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 
 	const renderCCNewField = (): ReactElement | null => (
 		<>
+			<AlertContainer
+				toastClassName="u-margin-bottom"
+				containerId={ALERT_CONTAINER_IDS.detailCCNewField}
+			/>
 			<div className="u-margin-bottom-lg">
 				<div className="row between-xs top-xs">
 					<div className="col-xs-12 col-md-3 u-margin-bottom">

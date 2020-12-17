@@ -9,6 +9,9 @@ export const BASE_DETAIL_PATH = `${root}/:presetUuid`;
 export const DETAIL_CC_PATH = `${BASE_DETAIL_PATH}/content-componenten`;
 export const FIELD_NEW_PATH = `${DETAIL_CC_PATH}/aanmaken`;
 export const FIELD_UPDATE_PATH = `${DETAIL_CC_PATH}/:contentComponentUuid/bewerken`;
+export const DYNAMIC_FIELD_BASE_PATH = `${FIELD_UPDATE_PATH}/dynamisch`;
+export const DYNAMIC_FIELD_NEW_PATH = `${DYNAMIC_FIELD_BASE_PATH}/aanmaken`;
+export const DYNAMIC_FIELD_UPDATE_PATH = `${DYNAMIC_FIELD_BASE_PATH}/:dynamicContentComponentUuid/bewerken`;
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
@@ -33,6 +36,16 @@ export const MODULE_PATHS = {
 	detailCCUpdateFieldSettings: `${FIELD_UPDATE_PATH}/instellingen`,
 	detailCCUpdateFieldConfig: `${FIELD_UPDATE_PATH}/configuratie`,
 	detailCCUpdateFieldValidation: `${FIELD_UPDATE_PATH}/validatie`,
+
+	detailCCNewDynamicField: DYNAMIC_FIELD_NEW_PATH,
+	detailCCNewDynamicFieldSettings: `${DYNAMIC_FIELD_NEW_PATH}/instellingen`,
+	detailCCNewDynamicFieldConfig: `${DYNAMIC_FIELD_NEW_PATH}/configuratie`,
+	detailCCNewDynamicFieldValidation: `${DYNAMIC_FIELD_NEW_PATH}/validatie`,
+
+	detailCCUpdateDynamicField: DYNAMIC_FIELD_UPDATE_PATH,
+	detailCCUpdateDynamicFieldSettings: `${DYNAMIC_FIELD_UPDATE_PATH}/instellingen`,
+	detailCCUpdateDynamicFieldConfig: `${DYNAMIC_FIELD_UPDATE_PATH}/configuratie`,
+	detailCCUpdateDynamicFieldValidation: `${DYNAMIC_FIELD_UPDATE_PATH}/validatie`,
 };
 
 export const ALERT_CONTAINER_IDS = {
@@ -41,6 +54,8 @@ export const ALERT_CONTAINER_IDS = {
 	detailCC: 'custom-cc-detail-cc',
 	detailCCNewField: 'custom-cc-detail-cc-new-field',
 	detailCCUpdateField: 'custom-cc-detail-cc-update-field',
+	detailCCNewDynamicField: 'custom-cc-detail-cc-new-dynamic-field',
+	detailCCUpdateDynamicField: 'custom-cc-detail-cc-update-dynamic-field',
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({

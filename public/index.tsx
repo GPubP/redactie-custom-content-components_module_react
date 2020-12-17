@@ -8,13 +8,17 @@ import { ModuleProps, PageType } from './lib/customCC.types';
 import { getPageTitle } from './lib/helpers';
 import {
 	CreateView,
+	DetailCCNewDynamicFieldView,
 	DetailCCNewFieldView,
+	DetailCCUpdateDynamicFieldView,
 	DetailCCUpdateFieldView,
 	DetailCCView,
 	DetailSettingsView,
 	OverviewView,
 	UpdateView,
 } from './lib/views';
+
+console.log('/////////////////////////');
 
 const CustomCCComponent: FC<ModuleProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
@@ -59,6 +63,52 @@ Core.routes.register({
 			component: UpdateView,
 			redirect: MODULE_PATHS.detailSettings,
 			routes: [
+				{
+					path: MODULE_PATHS.detailCCNewDynamicField,
+					breadcrumb: null,
+					component: DetailCCNewDynamicFieldView,
+					redirect: MODULE_PATHS.detailCCNewDynamicFieldSettings,
+					routes: [
+						{
+							path: MODULE_PATHS.detailCCNewDynamicFieldSettings,
+							title: getPageTitle(PageType.DynamicField),
+							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
+						},
+						{
+							path: MODULE_PATHS.detailCCNewDynamicFieldConfig,
+							title: getPageTitle(PageType.DynamicField),
+							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
+						},
+						{
+							path: MODULE_PATHS.detailCCNewDynamicFieldValidation,
+							title: getPageTitle(PageType.DynamicField),
+							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
+						},
+					],
+				},
+				{
+					path: MODULE_PATHS.detailCCUpdateDynamicField,
+					breadcrumb: null,
+					component: DetailCCUpdateDynamicFieldView,
+					redirect: MODULE_PATHS.detailCCUpdateDynamicFieldSettings,
+					routes: [
+						{
+							path: MODULE_PATHS.detailCCUpdateDynamicFieldSettings,
+							title: getPageTitle(PageType.DynamicField),
+							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
+						},
+						{
+							path: MODULE_PATHS.detailCCUpdateDynamicFieldConfig,
+							title: getPageTitle(PageType.DynamicField),
+							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
+						},
+						{
+							path: MODULE_PATHS.detailCCUpdateDynamicFieldValidation,
+							title: getPageTitle(PageType.DynamicField),
+							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
+						},
+					],
+				},
 				{
 					path: MODULE_PATHS.detailCCNewField,
 					breadcrumb: null,
