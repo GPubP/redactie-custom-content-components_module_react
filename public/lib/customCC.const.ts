@@ -1,7 +1,7 @@
 import { BreadcrumbOptions } from '@redactie/redactie-core';
 import { NavigateGenerateFn } from '@redactie/utils';
 
-import { Tab } from './customCC.types';
+import { ContextHeaderBadge, Tab } from './customCC.types';
 
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/content-componenten';
@@ -66,6 +66,8 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		`${TENANT_ROOT}${root}/aanmaken`,
 		`${TENANT_ROOT}${BASE_DETAIL_PATH}`,
 		`${TENANT_ROOT}${DETAIL_CC_PATH}/:contentComponentUuid`,
+		`${TENANT_ROOT}${DYNAMIC_FIELD_BASE_PATH}`,
+		`${TENANT_ROOT}${DYNAMIC_FIELD_BASE_PATH}/:dynamicContentComponentUuid`,
 	],
 	extraBreadcrumbs: [
 		{
@@ -98,3 +100,12 @@ export const CUSTOM_CC_DETAIL_TABS: Tab[] = [
 	CUSTOM_CC_DETAIL_TAB_MAP.settings,
 	CUSTOM_CC_DETAIL_TAB_MAP.contentComponents,
 ];
+
+export const CONTEXT_HEADER_ROUTE_BAGES: Record<'detailCC', ContextHeaderBadge[]> = {
+	detailCC: [
+		{
+			name: 'CONTENT COMPONENTEN',
+			type: 'primary',
+		},
+	],
+};

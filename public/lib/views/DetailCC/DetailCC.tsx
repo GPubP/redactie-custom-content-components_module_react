@@ -1,7 +1,7 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { AlertContainer, LeavePrompt, useNavigate } from '@redactie/utils';
-import { o, path, pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AddCCForm, AddCCFormState } from '../../components';

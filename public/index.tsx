@@ -2,8 +2,9 @@ import Core from '@redactie/redactie-core';
 import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
+import { DynamicFieldBreadCrumb, PresetBreadCrumb } from './lib/components';
 import { contentTypesConnector } from './lib/connectors';
-import { MODULE_PATHS } from './lib/customCC.const';
+import { CONTEXT_HEADER_ROUTE_BAGES, MODULE_PATHS } from './lib/customCC.const';
 import { ModuleProps, PageType } from './lib/customCC.types';
 import { getPageTitle } from './lib/helpers';
 import {
@@ -63,46 +64,52 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCNewDynamicField,
-					breadcrumb: null,
+					breadcrumb: DynamicFieldBreadCrumb,
 					component: DetailCCNewDynamicFieldView,
 					redirect: MODULE_PATHS.detailCCNewDynamicFieldSettings,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCNewDynamicFieldSettings,
 							title: getPageTitle(PageType.DynamicField),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewDynamicFieldConfig,
 							title: getPageTitle(PageType.DynamicField),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewDynamicFieldValidation,
 							title: getPageTitle(PageType.DynamicField),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
 						},
 					],
 				},
 				{
 					path: MODULE_PATHS.detailCCUpdateDynamicField,
-					breadcrumb: null,
+					breadcrumb: DynamicFieldBreadCrumb,
 					component: DetailCCUpdateDynamicFieldView,
 					redirect: MODULE_PATHS.detailCCUpdateDynamicFieldSettings,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCUpdateDynamicFieldSettings,
 							title: getPageTitle(PageType.DynamicField),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCUpdateDynamicFieldConfig,
 							title: getPageTitle(PageType.DynamicField),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCUpdateDynamicFieldValidation,
 							title: getPageTitle(PageType.DynamicField),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
 						},
 					],
@@ -117,16 +124,19 @@ Core.routes.register({
 							path: MODULE_PATHS.detailCCNewFieldSettings,
 							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
 							title: getPageTitle(PageType.Field),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewFieldConfig,
 							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
 							title: getPageTitle(PageType.Field),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewFieldValidation,
 							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
 							title: getPageTitle(PageType.Field),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 						},
 					],
 				},
@@ -140,16 +150,19 @@ Core.routes.register({
 							path: MODULE_PATHS.detailCCUpdateFieldSettings,
 							component: contentTypesConnector.views.tenant.ContentTypesCCSettings,
 							title: getPageTitle(PageType.Field),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 						},
 						{
 							path: MODULE_PATHS.detailCCUpdateFieldConfig,
 							component: contentTypesConnector.views.tenant.ContentTypesCCConfig,
 							title: getPageTitle(PageType.Field),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 						},
 						{
 							path: MODULE_PATHS.detailCCUpdateFieldValidation,
 							component: contentTypesConnector.views.tenant.ContentTypesCCValidation,
 							title: getPageTitle(PageType.Field),
+							badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 						},
 					],
 				},
@@ -161,7 +174,9 @@ Core.routes.register({
 				{
 					path: MODULE_PATHS.detailCC,
 					component: DetailCCView,
+					breadcrumb: PresetBreadCrumb,
 					title: getPageTitle(PageType.Preset),
+					badges: CONTEXT_HEADER_ROUTE_BAGES.detailCC,
 				},
 			],
 		},

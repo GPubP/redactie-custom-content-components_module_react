@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import { contentTypesConnector } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
 import { RouteProps, Tab, TabsLinkProps } from '../../customCC.types';
-import { useActiveTabs } from '../../hooks';
+import { useActiveField, useActiveTabs, useDynamicField } from '../../hooks';
 
 const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	const { presetUuid } = match.params;
@@ -44,12 +44,14 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
+	const dynamicField = useDynamicField();
+	const activeField = useActiveField();
 	const [activePreset] = contentTypesConnector.hooks.usePreset(presetUuid);
 	const [presetsLoading, presets] = contentTypesConnector.hooks.usePresets();
-	const [, detailState] = (contentTypesConnector.hooks.usePresetsUIStates as any)(presetUuid);
+	const [, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
 	const [fieldTypesLoading, fieldTypes] = contentTypesConnector.hooks.useFieldTypes();
-	const [fieldsHaveChanged] = useDetectValueChangesWorker(
-		detailState && !detailState.isFetching,
+	const [fieldsHaveChanged, resetChangeDetection] = useDetectValueChangesWorker(
+		!detailState?.isFetching,
 		activePreset?.data?.fields,
 		BFF_MODULE_PUBLIC_PATH
 	);
@@ -59,8 +61,8 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			return;
 		}
 
-		return activeRouteConfig.title(activePreset);
-	}, [activePreset, activeRouteConfig]);
+		return activeRouteConfig.title(activePreset, activeField, dynamicField);
+	}, [activeField, activePreset, activeRouteConfig, dynamicField]);
 
 	// Fetch fieldTypes and presets
 	useEffect(() => {
@@ -101,17 +103,19 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	};
 
 	const onSubmit = (data: PresetDetailModel, tab: Tab): void => {
-		contentTypesConnector.presetsFacade.updatePreset(
-			{
-				uuid: data.uuid,
-				body: {
-					data: data.data,
-				} as any,
-			},
-			{
-				alertContainerId: tab.containerId,
-			}
-		);
+		contentTypesConnector.presetsFacade
+			.updatePreset(
+				{
+					uuid: data.uuid,
+					body: {
+						data: data.data,
+					} as any,
+				},
+				{
+					alertContainerId: tab.containerId,
+				}
+			)
+			.finally(() => resetChangeDetection());
 	};
 
 	/**
@@ -148,6 +152,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 					component: Link,
 				})}
 				tabs={showTabs && activeTabs}
+				badges={activeRouteConfig && activeRouteConfig.badges}
 				title={pageTitle}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
