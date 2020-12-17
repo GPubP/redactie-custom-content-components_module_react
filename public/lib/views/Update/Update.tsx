@@ -50,7 +50,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	const [presetsLoading, presets] = contentTypesConnector.hooks.usePresets();
 	const [, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
 	const [fieldTypesLoading, fieldTypes] = contentTypesConnector.hooks.useFieldTypes();
-	const [fieldsHaveChanged] = useDetectValueChangesWorker(
+	const [fieldsHaveChanged, resetChangeDetection] = useDetectValueChangesWorker(
 		!detailState?.isFetching,
 		activePreset?.data?.fields,
 		BFF_MODULE_PUBLIC_PATH
@@ -103,17 +103,19 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	};
 
 	const onSubmit = (data: PresetDetailModel, tab: Tab): void => {
-		contentTypesConnector.presetsFacade.updatePreset(
-			{
-				uuid: data.uuid,
-				body: {
-					data: data.data,
-				} as any,
-			},
-			{
-				alertContainerId: tab.containerId,
-			}
-		);
+		contentTypesConnector.presetsFacade
+			.updatePreset(
+				{
+					uuid: data.uuid,
+					body: {
+						data: data.data,
+					} as any,
+				},
+				{
+					alertContainerId: tab.containerId,
+				}
+			)
+			.finally(() => resetChangeDetection());
 	};
 
 	/**
