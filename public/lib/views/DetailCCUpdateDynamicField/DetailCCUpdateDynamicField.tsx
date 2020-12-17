@@ -81,7 +81,6 @@ const DetailCCUpdateDynamicFieldView: FC<DetailRouteProps> = ({
 			dynamicContentComponentUuid,
 		}),
 	}));
-	console.log(dynamicField);
 
 	/**
 	 * Trigger errors on form when switching from compartments

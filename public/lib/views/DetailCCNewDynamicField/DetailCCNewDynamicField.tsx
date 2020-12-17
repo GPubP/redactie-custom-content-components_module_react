@@ -56,7 +56,7 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 	const [fieldType, fieldTypeUI] = contentTypesConnector.hooks.useFieldType(
 		preset ? preset?.data.fieldType.uuid : queryParams.fieldType
 	);
-	console.log('wtf', queryParams);
+
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const dynamicActiveField = useDynamicActiveField();

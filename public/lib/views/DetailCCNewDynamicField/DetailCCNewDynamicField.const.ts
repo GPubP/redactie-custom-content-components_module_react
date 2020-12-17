@@ -50,5 +50,3 @@ export const NEW_DYNAMIC_FIELD_ALLOWED_PATHS = [
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewDynamicFieldConfig}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewDynamicFieldValidation}`,
 ];
-
-console.log(NEW_DYNAMIC_FIELD_ALLOWED_PATHS);

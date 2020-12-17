@@ -214,20 +214,8 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 			preset: preset,
 			dynamicFieldSettingsContext: {
 				dynamicField,
-				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) => {
-					console.log(
-						generatePath(
-							MODULE_PATHS.detailCCNewDynamicFieldSettings,
-							{
-								presetUuid,
-								contentComponentUuid: activeField?.uuid,
-							},
-							new URLSearchParams(
-								isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
-							)
-						)
-					);
-					return generatePath(
+				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) =>
+					generatePath(
 						MODULE_PATHS.detailCCNewDynamicFieldSettings,
 						{
 							presetUuid,
@@ -236,8 +224,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 						new URLSearchParams(
 							isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
 						)
-					);
-				},
+					),
 				getEditPath: (uuid: string) =>
 					generatePath(MODULE_PATHS.detailCCUpdateDynamicFieldSettings, {
 						presetUuid,

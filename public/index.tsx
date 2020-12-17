@@ -18,8 +18,6 @@ import {
 	UpdateView,
 } from './lib/views';
 
-console.log('/////////////////////////');
-
 const CustomCCComponent: FC<ModuleProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
