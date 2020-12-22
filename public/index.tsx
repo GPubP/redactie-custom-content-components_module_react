@@ -33,16 +33,16 @@ Core.routes.register({
 	path: MODULE_PATHS.root,
 	component: CustomCCComponent,
 	breadcrumb: null,
+	navigation: {
+		label: 'Content componenten',
+		order: 1,
+		parentPath: MODULE_PATHS.contentTypes,
+	},
 	redirect: MODULE_PATHS.overview,
 	routes: [
 		{
 			path: MODULE_PATHS.overview,
 			component: OverviewView,
-			navigation: {
-				label: 'Content componenten',
-				order: 1,
-				parentPath: MODULE_PATHS.contentTypes,
-			},
 		},
 		{
 			path: MODULE_PATHS.create,
