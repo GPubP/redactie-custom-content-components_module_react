@@ -1,10 +1,10 @@
 import {
+	Link as AUILink,
 	Button,
 	Card,
 	CardBody,
 	CardDescription,
 	CardTitle,
-	Link,
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { PresetDetailModel } from '@redactie/content-types-module';
@@ -17,6 +17,7 @@ import {
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import React, { FC, ReactElement, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { CustomCCSettingsForm, PresetStatus } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
@@ -37,8 +38,8 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
-	const { generatePath } = useNavigate();
 	const [listState, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
+	const { generatePath } = useNavigate();
 
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(
@@ -107,16 +108,34 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 	};
 
 	const renderStatusCard = (): ReactElement => {
-		const occurrences = ((preset.meta as any).occurrences as any[]) || [];
+		const occurrences = preset.meta.occurrences || [];
 		const occurrencesCount = occurrences.length;
 		const isActive = !!preset.meta.active;
-		const text = `Deze content component wordt gebruikt in ${occurrencesCount} content types`;
+		const pluralSingularText = occurrencesCount === 1 ? 'content type' : 'content types';
+		const text = (
+			<>
+				Deze content component wordt gebruikt in{' '}
+				<strong>
+					{occurrencesCount} {pluralSingularText}
+				</strong>
+			</>
+		);
 
-		const statusText = preset.meta.active
-			? occurrencesCount > 0
-				? `${text} en kan daarom niet gedeactiveerd worden.`
-				: `${text}. Deactiveer deze component indien je hem tijdelijk niet meer wil kunnen toevoegen aan nieuwe content types.`
-			: `${text}. Activeer deze component indien je hem wil kunnen toevoegen aan niewe content types.`;
+		const statusText = preset.meta.active ? (
+			occurrencesCount > 0 ? (
+				<p> {text} en kan daarom niet gedeactiveerd worden.</p>
+			) : (
+				<p>
+					{text}. Deactiveer deze component indien je hem tijdelijk niet meer wil kunnen
+					toevoegen aan nieuwe content types.
+				</p>
+			)
+		) : (
+			<p>
+				{text}. Activeer deze component indien je hem wil kunnen toevoegen aan niewe content
+				types.
+			</p>
+		);
 
 		return (
 			<Card>
@@ -124,25 +143,23 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 					<CardTitle>
 						Status: <PresetStatus active={isActive} />
 					</CardTitle>
-					<CardDescription>
-						{statusText}
-						{occurrencesCount > 0 && (
-							<ul>
-								{occurrences.map((occurrence, index) => (
-									<li key={`${index}_${occurrence.uuid}`}>
-										<Link
-											to={generatePath(
-												`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`
-											)}
-											component={Link}
-										>
-											{occurrence.name}
-										</Link>
-									</li>
-								))}
-							</ul>
-						)}
-					</CardDescription>
+					<CardDescription>{statusText}</CardDescription>
+					{occurrencesCount > 0 && (
+						<ul>
+							{occurrences.map((occurrence, index) => (
+								<li key={`${index}_${occurrence.uuid}`}>
+									<AUILink
+										to={generatePath(
+											`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`
+										)}
+										component={Link}
+									>
+										{occurrence.name}
+									</AUILink>
+								</li>
+							))}
+						</ul>
+					)}
 					{isActive && occurrencesCount === 0 && (
 						<Button
 							{...getLoadingStateBtnProps(!!detailState?.isActivating)}
