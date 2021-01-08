@@ -107,7 +107,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 	};
 
 	const renderStatusCard = (): ReactElement => {
-		const occurrences = preset.occurrences || [];
+		const occurrences = ((preset.meta as any).occurrences as any[]) || [];
 		const occurrencesCount = occurrences.length;
 		const isActive = !!preset.meta.active;
 		const text = `Deze content component wordt gebruikt in ${occurrencesCount} content types`;
@@ -189,7 +189,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 
 					return (
 						<>
-							{renderStatusCard()}
+							<div className="u-margin-top">{renderStatusCard()}</div>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
 									<div className="u-wrapper u-text-right">
