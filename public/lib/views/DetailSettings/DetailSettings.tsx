@@ -1,4 +1,11 @@
-import { Button } from '@acpaas-ui/react-components';
+import {
+	Button,
+	Card,
+	CardBody,
+	CardDescription,
+	CardTitle,
+	Link,
+} from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { PresetDetailModel } from '@redactie/content-types-module';
 import {
@@ -6,13 +13,14 @@ import {
 	alertService,
 	LeavePrompt,
 	useDetectValueChangesWorker,
+	useNavigate,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
-import React, { FC, useMemo, useRef, useState } from 'react';
+import React, { FC, ReactElement, useMemo, useRef, useState } from 'react';
 
-import { CustomCCSettingsForm } from '../../components';
+import { CustomCCSettingsForm, PresetStatus } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
-import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP } from '../../customCC.const';
+import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 
 const DetailSettingsView: FC<DetailRouteProps> = ({
@@ -29,6 +37,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
+	const { generatePath } = useNavigate();
 	const [listState, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
 
 	const formikRef = useRef<FormikProps<FormikValues>>();
@@ -80,9 +89,89 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 		resetChangeDetection();
 	};
 
+	const onActiveToggle = (): void => {
+		preset.meta.active
+			? contentTypesConnector.presetsFacade.deactivatePreset(presetUuid)
+			: contentTypesConnector.presetsFacade.activatePreset(presetUuid);
+	};
+
+	const getLoadingStateBtnProps = (
+		loading: boolean
+	): { iconLeft: string; disabled: boolean } | null => {
+		return loading
+			? {
+					iconLeft: 'circle-o-notch fa-spin',
+					disabled: true,
+			  }
+			: null;
+	};
+
+	const renderStatusCard = (): ReactElement => {
+		const occurrences = preset.occurrences || [];
+		const occurrencesCount = occurrences.length;
+		const isActive = !!preset.meta.active;
+		const text = `Deze content component wordt gebruikt in ${occurrencesCount} content types`;
+
+		const statusText = preset.meta.active
+			? occurrencesCount > 0
+				? `${text} en kan daarom niet gedeactiveerd worden.`
+				: `${text}. Deactiveer deze component indien je hem tijdelijk niet meer wil kunnen toevoegen aan nieuwe content types.`
+			: `${text}. Activeer deze component indien je hem wil kunnen toevoegen aan niewe content types.`;
+
+		return (
+			<Card>
+				<CardBody>
+					<CardTitle>
+						Status: <PresetStatus active={isActive} />
+					</CardTitle>
+					<CardDescription>
+						{statusText}
+						{occurrencesCount > 0 && (
+							<ul>
+								{occurrences.map((occurrence, index) => (
+									<li key={`${index}_${occurrence.uuid}`}>
+										<Link
+											to={generatePath(
+												`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`
+											)}
+											component={Link}
+										>
+											{occurrence.name}
+										</Link>
+									</li>
+								))}
+							</ul>
+						)}
+					</CardDescription>
+					{isActive && occurrencesCount === 0 && (
+						<Button
+							{...getLoadingStateBtnProps(!!detailState?.isActivating)}
+							onClick={onActiveToggle}
+							className="u-margin-top u-margin-right"
+							type="primary"
+						>
+							{t('BUTTON_DEACTIVATE')}
+						</Button>
+					)}
+					{!isActive && (
+						<Button
+							{...getLoadingStateBtnProps(!!detailState?.isActivating)}
+							onClick={onActiveToggle}
+							className="u-margin-top u-margin-right"
+							type="primary"
+						>
+							{t('BUTTON_ACTIVATE')}
+						</Button>
+					)}
+				</CardBody>
+			</Card>
+		);
+	};
+
 	/**
 	 * Render
 	 */
+
 	return (
 		<>
 			<AlertContainer
@@ -100,6 +189,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 
 					return (
 						<>
+							{renderStatusCard()}
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
 									<div className="u-wrapper u-text-right">

@@ -21,6 +21,8 @@ import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../c
 import { RouteProps, Tab, TabsLinkProps } from '../../customCC.types';
 import { useActiveField, useActiveTabs, useDynamicField } from '../../hooks';
 
+import { DEFAULT_PRESET_SEARCH_PARAMS } from './Update.const';
+
 const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	const { presetUuid } = match.params;
 	const showTabs = !/\/(aanmaken|bewerken)\//.test(location.pathname);
@@ -46,7 +48,10 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	});
 	const dynamicField = useDynamicField();
 	const activeField = useActiveField();
-	const [activePreset] = contentTypesConnector.hooks.usePreset(presetUuid);
+	const [activePreset] = contentTypesConnector.hooks.usePreset(
+		presetUuid,
+		DEFAULT_PRESET_SEARCH_PARAMS
+	);
 	const [presetsLoading, presets] = contentTypesConnector.hooks.usePresets();
 	const [, detailState] = contentTypesConnector.hooks.usePresetsUIStates(presetUuid);
 	const [fieldTypesLoading, fieldTypes] = contentTypesConnector.hooks.useFieldTypes();
