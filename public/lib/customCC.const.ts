@@ -7,10 +7,10 @@ export const TENANT_ROOT = '/:tenantId';
 export const root = '/content-componenten';
 export const BASE_DETAIL_PATH = `${root}/:presetUuid`;
 export const DETAIL_CC_PATH = `${BASE_DETAIL_PATH}/content-componenten`;
-export const FIELD_NEW_PATH = `${DETAIL_CC_PATH}/nieuw/aanmaken`;
+export const FIELD_NEW_PATH = `${DETAIL_CC_PATH}/aanmaken`;
 export const FIELD_UPDATE_PATH = `${DETAIL_CC_PATH}/:contentComponentUuid/bewerken`;
 export const DYNAMIC_FIELD_BASE_PATH = `${FIELD_UPDATE_PATH}/dynamisch`;
-export const DYNAMIC_FIELD_NEW_PATH = `${DYNAMIC_FIELD_BASE_PATH}/nieuw/aanmaken`;
+export const DYNAMIC_FIELD_NEW_PATH = `${DYNAMIC_FIELD_BASE_PATH}/aanmaken`;
 export const DYNAMIC_FIELD_UPDATE_PATH = `${DYNAMIC_FIELD_BASE_PATH}/:dynamicContentComponentUuid/bewerken`;
 
 export const MODULE_PATHS = {
@@ -62,12 +62,9 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 	excludePaths: [
 		'/',
 		`${TENANT_ROOT}`,
-		`${TENANT_ROOT}${root}`,
-		`${TENANT_ROOT}${root}/aanmaken`,
-		`${TENANT_ROOT}${BASE_DETAIL_PATH}`,
-		`${TENANT_ROOT}${DETAIL_CC_PATH}/:contentComponentUuid`,
+		`${TENANT_ROOT}${DETAIL_CC_PATH}/:contentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
 		`${TENANT_ROOT}${DYNAMIC_FIELD_BASE_PATH}`,
-		`${TENANT_ROOT}${DYNAMIC_FIELD_BASE_PATH}/:dynamicContentComponentUuid`,
+		`${TENANT_ROOT}${DYNAMIC_FIELD_BASE_PATH}/:dynamicContentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
 	],
 	extraBreadcrumbs: [
 		{

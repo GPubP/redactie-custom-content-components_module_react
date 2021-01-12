@@ -11,6 +11,7 @@ import {
 	useActiveRouteConfig,
 	useDetectValueChangesWorker,
 	useNavigate,
+	useRoutes,
 	useTenantContext,
 } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
@@ -39,7 +40,8 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const activeTabs = useActiveTabs(CUSTOM_CC_DETAIL_TABS, location.pathname);
-	const breadcrumbs = useBreadcrumbs(route.routes as ModuleRouteConfig[], {
+	const routes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
 		extraBreadcrumbs: [
 			...(BREADCRUMB_OPTIONS(generatePath).extraBreadcrumbs || []),
