@@ -33,7 +33,7 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		type: 'string',
 	},
 	default: {
-		defaultValue: true,
+		defaultValue: false,
 		type: 'boolean',
 	},
 };
