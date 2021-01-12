@@ -61,11 +61,11 @@ const CreateView: FC<RouteProps> = ({ location, route }) => {
 		},
 	});
 
-	const createPreset = (sectionData: CreatePresetPayload['data']): void => {
+	const createPreset = (sectionData: CreatePresetPayload): void => {
 		const payload = {
 			data: {
-				...sectionData,
-				name: kebabCase(sectionData.label),
+				...sectionData.data,
+				name: kebabCase(sectionData.data.label),
 				// TODO: remove this once default fieldType api call is available
 				fieldType: '5e848366b88e3f0122747224',
 				// TODO: remove type cast when CreatePresetPayload Type allows strings
@@ -96,7 +96,7 @@ const CreateView: FC<RouteProps> = ({ location, route }) => {
 			allowedPaths: CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS,
 			preset: generateEmptyPreset(),
 			onCancel: () => navigate(MODULE_PATHS.overview),
-			onSubmit: (sectionData: CreatePresetPayload['data']) => createPreset(sectionData),
+			onSubmit: (sectionData: CreatePresetPayload) => createPreset(sectionData),
 		};
 
 		return (
