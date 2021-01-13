@@ -14,14 +14,14 @@ const AddCCForm: FC<AddCCFormProps> = ({
 	fieldTypeOptions,
 	formState,
 	onSubmit,
-	presets,
+	preset,
 }) => {
 	const [t] = useCoreTranslation();
 
 	return (
 		<Formik
 			initialValues={formState}
-			validationSchema={ADD_CC_FORM_VALIDATION_SCHEMA(presets)}
+			validationSchema={ADD_CC_FORM_VALIDATION_SCHEMA(preset)}
 			onSubmit={onSubmit}
 		>
 			{({ submitForm }) => (

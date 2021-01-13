@@ -30,6 +30,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 	onSubmit,
 	preset,
 	match,
+	create,
 }) => {
 	const { presetUuid } = match.params;
 	const isUpdate = !!preset.uuid;
@@ -46,7 +47,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
 		[detailState, isUpdate, listState]
 	);
-	const [formValue, setFormValue] = useState<PresetDetailModel | null>(null);
+	const [formValue, setFormValue] = useState<PresetDetailModel | null>(preset);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,
 		formValue,
@@ -108,9 +109,9 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 	};
 
 	const renderStatusCard = (): ReactElement => {
-		const occurrences = preset.meta.occurrences || [];
+		const occurrences = preset.meta?.occurrences || [];
 		const occurrencesCount = occurrences.length;
-		const isActive = !!preset.meta.active;
+		const isActive = !!preset.meta?.active;
 		const pluralSingularText = occurrencesCount === 1 ? 'content type' : 'content types';
 		const text = (
 			<>
@@ -121,7 +122,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 			</>
 		);
 
-		const statusText = preset.meta.active ? (
+		const statusText = preset.meta?.active ? (
 			occurrencesCount > 0 ? (
 				<p> {text} en kan daarom niet gedeactiveerd worden.</p>
 			) : (
@@ -200,44 +201,41 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 				preset={preset}
 				isUpdate={isUpdate}
 				onSubmit={onFormSubmit}
+				onChange={setFormValue}
 			>
-				{({ submitForm, values }) => {
-					setFormValue(values);
-
-					return (
-						<>
-							<div className="u-margin-top">{renderStatusCard()}</div>
-							<ActionBar className="o-action-bar--fixed" isOpen>
-								<ActionBarContentSection>
-									<div className="u-wrapper u-text-right">
-										<Button onClick={onCancel} negative>
-											{isUpdate
-												? t(CORE_TRANSLATIONS.BUTTON_CANCEL)
-												: t(CORE_TRANSLATIONS.BUTTON_BACK)}
-										</Button>
-										<Button
-											iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
-											disabled={isLoading || !hasChanges}
-											className="u-margin-left-xs"
-											onClick={submitForm}
-											type="success"
-										>
-											{isUpdate
-												? t(CORE_TRANSLATIONS.BUTTON_SAVE)
-												: t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
-										</Button>
-									</div>
-								</ActionBarContentSection>
-							</ActionBar>
-							<LeavePrompt
-								allowedPaths={allowedPaths}
-								when={hasChanges}
-								shouldBlockNavigationOnConfirm
-								onConfirm={submitForm}
-							/>
-						</>
-					);
-				}}
+				{({ submitForm }) => (
+					<>
+						{!create && <div className="u-margin-top">{renderStatusCard()}</div>}
+						<ActionBar className="o-action-bar--fixed" isOpen>
+							<ActionBarContentSection>
+								<div className="u-wrapper u-text-right">
+									<Button onClick={onCancel} negative>
+										{isUpdate
+											? t(CORE_TRANSLATIONS.BUTTON_CANCEL)
+											: t(CORE_TRANSLATIONS.BUTTON_BACK)}
+									</Button>
+									<Button
+										iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
+										disabled={isLoading || !hasChanges}
+										className="u-margin-left-xs"
+										onClick={submitForm}
+										type="success"
+									>
+										{isUpdate
+											? t(CORE_TRANSLATIONS.BUTTON_SAVE)
+											: t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
+									</Button>
+								</div>
+							</ActionBarContentSection>
+						</ActionBar>
+						<LeavePrompt
+							allowedPaths={allowedPaths}
+							when={hasChanges}
+							shouldBlockNavigationOnConfirm
+							onConfirm={submitForm}
+						/>
+					</>
+				)}
 			</CustomCCSettingsForm>
 		</>
 	);
