@@ -32,6 +32,10 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: '',
 		type: 'string',
 	},
+	default: {
+		defaultValue: false,
+		type: 'boolean',
+	},
 };
 
 export const DEFAULT_FILTER_FORM: FilterFormState = {
