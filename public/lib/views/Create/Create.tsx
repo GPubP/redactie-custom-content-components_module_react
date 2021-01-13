@@ -10,6 +10,7 @@ import {
 	DataLoader,
 	RenderChildRoutes,
 	useNavigate,
+	useRoutes,
 	useTenantContext,
 } from '@redactie/utils';
 import kebabCase from 'lodash.kebabcase';
@@ -39,7 +40,8 @@ const CreateView: FC<RouteProps> = ({ location, route }) => {
 
 	const activeTabs = useActiveTabs(CUSTOM_CC_DETAIL_TABS.slice(0, 1), location.pathname);
 	const { generatePath, navigate } = useNavigate();
-	const breadcrumbs = useBreadcrumbs(route.routes as ModuleRouteConfig[], {
+	const routes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
 		extraBreadcrumbs: [
 			...(BREADCRUMB_OPTIONS(generatePath).extraBreadcrumbs || []),
