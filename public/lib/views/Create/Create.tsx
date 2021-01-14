@@ -95,6 +95,7 @@ const CreateView: FC<RouteProps> = ({ location, route }) => {
 
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
+			create: true,
 			allowedPaths: CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS,
 			preset: generateEmptyPreset(),
 			onCancel: () => navigate(MODULE_PATHS.overview),

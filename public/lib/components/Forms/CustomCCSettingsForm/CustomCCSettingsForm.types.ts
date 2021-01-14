@@ -9,5 +9,6 @@ export interface CustomCCSetingsFormProps {
 	formikRef?: Ref<FormikProps<FormikValues>>;
 	isUpdate?: boolean;
 	preset: PresetDetailModel;
+	onChange: (values: PresetDetailModel | null) => void;
 	onSubmit: (values: PresetDetailModel | null) => void;
 }

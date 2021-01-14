@@ -158,7 +158,7 @@ const DetailCCView: FC<DetailRouteProps> = ({
 									name: '',
 								}}
 								onSubmit={onAddCCSubmit}
-								presets={presets}
+								preset={preset}
 							/>
 						</div>
 					</Card>

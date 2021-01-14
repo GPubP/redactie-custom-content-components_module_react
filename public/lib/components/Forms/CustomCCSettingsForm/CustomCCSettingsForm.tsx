@@ -1,6 +1,6 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
 import { PresetDetailModel } from '@redactie/content-types-module';
-import { CopyValue, ErrorMessage } from '@redactie/utils';
+import { CopyValue, ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
 import React, { FC } from 'react';
 
@@ -15,8 +15,9 @@ const CustomCCSettingsForm: FC<CustomCCSetingsFormProps> = ({
 	children,
 	disabled = false,
 	formikRef,
-	onSubmit,
 	preset,
+	onSubmit,
+	onChange,
 }) => {
 	/**
 	 * Hooks
@@ -40,6 +41,9 @@ const CustomCCSettingsForm: FC<CustomCCSetingsFormProps> = ({
 
 				return (
 					<>
+						<FormikOnChangeHandler
+							onChange={values => onChange(values as PresetDetailModel)}
+						/>
 						<div className="row">
 							<div className="col-xs-12 col-md-8 row middle-xs">
 								<div className="col-xs-12 col-md-8">

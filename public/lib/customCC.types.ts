@@ -35,6 +35,7 @@ export interface DetailRouteProps<Params = CustomCCDetailRouteParams>
 	readonly fieldTypes: FieldTypeListModel[];
 	readonly preset: PresetDetailModel;
 	readonly presets: PresetListModel[];
+	readonly create: boolean;
 	onCancel: () => void;
 	onSubmit: (data: CreatePresetPayload['data'] | PresetDetailModel, tab: Tab) => void;
 }
