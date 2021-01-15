@@ -1,6 +1,6 @@
 {
   "name": "@redactie/custom-content-components-module",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "redactie custom content components module",
   "main": "dist/redactie-custom-content-components-module.umd.js",
   "module": "dist/redactie-custom-content-components-module.umd.js",
