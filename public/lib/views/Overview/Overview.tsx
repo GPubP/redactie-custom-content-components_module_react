@@ -115,11 +115,7 @@ const OverviewView: FC = () => {
 	 */
 
 	const renderOverview = (): ReactElement | null => {
-		if (!pagination?.data.length) {
-			return null;
-		}
-
-		const customCCRows: OverviewTableRow[] = pagination?.data.map(preset => ({
+		const customCCRows: OverviewTableRow[] = (pagination?.data || []).map(preset => ({
 			uuid: preset.uuid,
 			name: preset.data.label,
 			description: `[${preset.data.name}]`,
@@ -146,6 +142,8 @@ const OverviewView: FC = () => {
 					itemsPerPage={query.limit}
 					onPageChange={onPageChange}
 					orderBy={onOrderBy}
+					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
+					loadDataMessage="Content componenten ophalen"
 					activeSorting={activeSorting}
 					totalValues={pagination?.total || 0}
 					loading={loading}
