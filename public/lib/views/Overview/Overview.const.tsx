@@ -1,8 +1,9 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { Status } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { APIQueryParamsConfig } from '@redactie/utils';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
@@ -47,15 +48,13 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'name',
-		component(name: string, { description }: OverviewTableRow) {
+		component(name: string, { description, uuid }: OverviewTableRow) {
 			return (
 				<>
-					{name}
-					{description && (
-						<p>
-							<small>{description}</small>
-						</p>
-					)}
+					<AUILink to={`${uuid}/instellingen`} component={Link}>
+						{name}
+					</AUILink>
+					{description && <p className="u-text-light u-margin-top-xs">{description}</p>}
 				</>
 			);
 		},
@@ -79,7 +78,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detail, { presetUuid: uuid })}
+					onClick={() => navigate(MODULE_PATHS.detailCC, { presetUuid: uuid })}
 					transparent
 				/>
 			);
