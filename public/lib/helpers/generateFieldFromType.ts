@@ -7,31 +7,47 @@ export const generateFieldFromType = (
 	fieldType: FieldTypeDetailModel,
 	initialValues: Partial<Omit<Field, 'compartment'>> = {},
 	preset?: PresetDetailModel
-): Omit<Field, 'compartment'> => ({
-	__new: true,
-	uuid: uuidv4(),
-	label: '',
-	module: fieldType.data.module || '',
-	name: '',
-	config: contentTypesConnector.helpers.generateConfig(fieldType.data, preset),
-	validators: [],
-	validation: contentTypesConnector.helpers.generateValidationChecks(
+): Omit<Field, 'compartment'> => {
+	// Generate default validation checks
+	const validation = contentTypesConnector.helpers.generateValidationChecks(
 		{},
 		fieldType.data,
+		preset
+	);
+	// Generate formdata based on these checks (needed for config generation)
+	const validationData = contentTypesConnector.helpers.createInitialValuesFromChecks(
+		validation.checks
+	);
+	// Generate baseConfig
+	const baseConfig = contentTypesConnector.helpers.generateConfig(fieldType.data, preset);
+	// Enrich the baseConfig with required settings
+	const config = contentTypesConnector.helpers.generateConfigFromValidationData(
+		validationData,
 		preset,
-		true
-	),
-	operators: [],
-	...initialValues,
-	generalConfig: {
-		guideline: '',
-		required: false,
-		hidden: false,
-		min: 0,
-		max: 1,
-		...initialValues.generalConfig,
-	},
-	dataType: fieldType.data.dataType,
-	fieldType,
-	preset,
-});
+		baseConfig
+	);
+
+	return {
+		__new: true,
+		uuid: uuidv4(),
+		label: '',
+		module: fieldType.data.module || '',
+		name: '',
+		config,
+		validators: [],
+		validation,
+		operators: [],
+		...initialValues,
+		generalConfig: {
+			guideline: '',
+			required: false,
+			hidden: false,
+			min: 0,
+			max: 1,
+			...initialValues.generalConfig,
+		},
+		dataType: fieldType.data.dataType,
+		fieldType,
+		preset,
+	};
+};
