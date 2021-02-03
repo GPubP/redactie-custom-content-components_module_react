@@ -47,14 +47,17 @@ export const DEFAULT_FILTER_FORM: FilterFormState = {
 export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
-		value: 'name',
-		component(name: string, { description, uuid }: OverviewTableRow) {
+		value: 'label',
+		component(label: string, { description, name, uuid }: OverviewTableRow) {
 			return (
 				<>
 					<AUILink to={`${uuid}/instellingen`} component={Link}>
-						{name}
+						{label}
 					</AUILink>
-					{description && <p className="u-text-light u-margin-top-xs">{description}</p>}
+					<p className="u-text-light u-margin-top-xs small">
+						[{name}]{' '}
+						{description || <span className="u-text-italic">Geen beschrijving</span>}
+					</p>
 				</>
 			);
 		},

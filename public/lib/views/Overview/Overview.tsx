@@ -117,8 +117,9 @@ const OverviewView: FC = () => {
 	const renderOverview = (): ReactElement | null => {
 		const customCCRows: OverviewTableRow[] = (pagination?.data || []).map(preset => ({
 			uuid: preset.uuid,
-			name: preset.data.label,
-			description: `[${preset.data.name}]`,
+			label: preset.data.label,
+			name: preset.data.name,
+			description: preset.data.description,
 			active: true,
 			navigate,
 		}));
