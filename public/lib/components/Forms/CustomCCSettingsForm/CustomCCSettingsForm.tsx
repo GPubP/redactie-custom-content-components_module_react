@@ -65,9 +65,8 @@ const CustomCCSettingsForm: FC<CustomCCSetingsFormProps> = ({
 							<div className="col-xs-12 u-margin-top">
 								<Field
 									as={Textarea}
-									disabled
 									id="data.description"
-									label="Beschrijving (nog niet beschikbaar)"
+									label="Beschrijving"
 									name="data.description"
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
