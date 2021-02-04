@@ -17,11 +17,7 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: 1,
 		type: 'number',
 	},
-	skip: {
-		defaultValue: 0,
-		type: 'number',
-	},
-	limit: {
+	pagesize: {
 		defaultValue: 10,
 		type: 'number',
 	},

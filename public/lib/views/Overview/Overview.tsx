@@ -92,7 +92,6 @@ const OverviewView: FC = () => {
 
 	const onPageChange = (page: number): void => {
 		setQuery({
-			skip: (page - 1) * query.limit,
 			page,
 		});
 	};
@@ -140,7 +139,7 @@ const OverviewView: FC = () => {
 					columns={OVERVIEW_COLUMNS(t)}
 					rows={customCCRows}
 					currentPage={pagination?.currentPage || 1}
-					itemsPerPage={query.limit}
+					itemsPerPage={query.pagesize}
 					onPageChange={onPageChange}
 					orderBy={onOrderBy}
 					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
