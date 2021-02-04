@@ -56,7 +56,11 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 					</AUILink>
 					<p className="u-text-light u-margin-top-xs small">
 						[{name}]{' '}
-						{description || <span className="u-text-italic">Geen beschrijving</span>}
+						{description || (
+							<span className="u-text-italic">
+								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+							</span>
+						)}
 					</p>
 				</>
 			);
