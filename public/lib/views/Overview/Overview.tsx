@@ -134,7 +134,9 @@ const OverviewView: FC = () => {
 					/>
 				</div>
 				<PaginatedTable
+					fixed
 					className="u-margin-top"
+					tableClassName="a-table--fixed--xs"
 					columns={OVERVIEW_COLUMNS(t)}
 					rows={customCCRows}
 					currentPage={pagination?.currentPage || 1}

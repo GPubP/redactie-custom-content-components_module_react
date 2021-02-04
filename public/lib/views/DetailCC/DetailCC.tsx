@@ -124,9 +124,11 @@ const DetailCCView: FC<DetailRouteProps> = ({
 
 		return (
 			<Table
+				fixed
 				dataKey="id"
 				draggable
 				className="u-margin-top"
+				tableClassName="a-table--fixed--lg"
 				columns={DETAIL_CC_COLUMNS(t, onMoveRow)}
 				moveRow={onMoveRowDnD}
 				rows={contentTypeRows}

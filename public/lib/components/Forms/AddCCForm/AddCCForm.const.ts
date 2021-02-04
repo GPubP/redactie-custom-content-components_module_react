@@ -17,4 +17,5 @@ export const ADD_CC_FORM_VALIDATION_SCHEMA = (preset: PresetDetailModel): any =>
 				message: value => `Naam ${value.originalValue} bestaat reeds`,
 				test: name => !preset?.data?.fields?.find(f => f.field.label === name),
 			}),
+		fieldType: string().required('Gelieve een content component te selecteren'),
 	});

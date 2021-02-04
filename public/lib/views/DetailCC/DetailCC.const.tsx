@@ -1,4 +1,5 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { isNil } from 'ramda';
 import React from 'react';
@@ -19,6 +20,7 @@ export const DETAIL_CC_COLUMNS = (
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
+		width: '35%',
 		component(value: string, rowData: DetailCCRowData) {
 			const { name, path } = rowData;
 			return (
@@ -45,13 +47,21 @@ export const DETAIL_CC_COLUMNS = (
 							transparent
 						/>
 					</ButtonGroup>
-					<div className="u-margin-left-xs">
+					<div className="u-margin-left-xs u-min-w-0">
 						{path ? (
-							<Link to={path}>{value}</Link>
+							<Link to={path}>
+								<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
+							</Link>
 						) : (
-							<p className="u-text-bold">{value}</p>
+							<p className="u-text-bold">
+								<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
+							</p>
 						)}
-						{name && <p className="u-text-light">systeemnaam: [{name}]</p>}
+						{name && (
+							<p className="u-text-light">
+								<EllipsisWithTooltip>systeemnaam: [{name}]</EllipsisWithTooltip>
+							</p>
+						)}
 					</div>
 				</div>
 			);
@@ -60,6 +70,8 @@ export const DETAIL_CC_COLUMNS = (
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
+		width: '15%',
+		ellipsis: true,
 		disableSorting: true,
 	},
 	{
@@ -72,6 +84,7 @@ export const DETAIL_CC_COLUMNS = (
 				<StatusIcon active={rowData.multiple ?? false} />
 			) : null;
 		},
+		width: '10%',
 	},
 	{
 		label: 'Verplicht',
@@ -83,12 +96,14 @@ export const DETAIL_CC_COLUMNS = (
 				<StatusIcon active={rowData.required ?? false} />
 			) : null;
 		},
+		width: '10%',
 	},
 	{
 		label: 'Vertaalbaar',
 		value: 'translatable',
 		disableSorting: true,
 		classList: ['u-text-center'],
+		width: '10%',
 		component(value: any, rowData: DetailCCRowData) {
 			return !isNil(rowData.translatable) ? (
 				<StatusIcon active={rowData.translatable ?? false} />
@@ -100,6 +115,7 @@ export const DETAIL_CC_COLUMNS = (
 		value: 'hidden',
 		disableSorting: true,
 		classList: ['u-text-center'],
+		width: '10%',
 		component(value: any, rowData: DetailCCRowData) {
 			return !isNil(rowData.hidden) ? <StatusIcon active={rowData.hidden ?? false} /> : null;
 		},
@@ -107,7 +123,8 @@ export const DETAIL_CC_COLUMNS = (
 	{
 		label: '',
 		disableSorting: true,
-		classList: ['is-condensed'],
+		classList: ['is-condensed', 'u-text-right'],
+		width: '10%',
 		component(value: any, rowData: DetailCCRowData) {
 			return (
 				<Button

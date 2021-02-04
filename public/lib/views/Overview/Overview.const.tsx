@@ -1,5 +1,5 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
-import { Status } from '@acpaas-ui/react-editorial-components';
+import { EllipsisWithTooltip, Status } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { APIQueryParamsConfig } from '@redactie/utils';
 import React from 'react';
@@ -44,13 +44,18 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'name',
+		width: '60%',
 		component(name: string, { description, uuid }: OverviewTableRow) {
 			return (
 				<>
 					<AUILink to={`${uuid}/instellingen`} component={Link}>
-						{name}
+						<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
 					</AUILink>
-					{description && <p className="u-text-light u-margin-top-xs">{description}</p>}
+					{description && (
+						<p className="u-text-light u-margin-top-xs">
+							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+						</p>
+					)}
 				</>
 			);
 		},
@@ -58,6 +63,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'active',
+		width: '20%',
 		component(active: boolean) {
 			const activeLabel = active
 				? t(CORE_TRANSLATIONS.STATUS_ACTIVE)
@@ -69,6 +75,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		label: '',
 		classList: ['u-text-right'],
 		disableSorting: true,
+		width: '20%',
 		component(value: unknown, { navigate, uuid }: OverviewTableRow) {
 			return (
 				<Button
