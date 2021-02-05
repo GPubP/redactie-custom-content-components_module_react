@@ -50,7 +50,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 					<AUILink to={`${uuid}/instellingen`} component={Link}>
 						{label}
 					</AUILink>
-					<p className="u-text-light u-margin-top-xs small">
+					<p className="small">
 						[{name}]{' '}
 						{description || (
 							<span className="u-text-italic">
