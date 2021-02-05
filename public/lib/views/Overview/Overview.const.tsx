@@ -52,13 +52,17 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 					</AUILink>
 					<p className="small">
-						[{name}]{' '}
 						{description ? (
-							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+							<EllipsisWithTooltip>
+								[{name}] {description}
+							</EllipsisWithTooltip>
 						) : (
-							<span className="u-text-italic">
-								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
-							</span>
+							<EllipsisWithTooltip>
+								[{name}]{' '}
+								<span className="u-text-italic">
+									{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+								</span>
+							</EllipsisWithTooltip>
 						)}
 					</p>
 				</>
