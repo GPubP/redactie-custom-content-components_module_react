@@ -43,19 +43,24 @@ export const DEFAULT_FILTER_FORM: FilterFormState = {
 export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
-		value: 'name',
+		value: 'label',
 		width: '60%',
-		component(name: string, { description, uuid }: OverviewTableRow) {
+		component(label: string, { description, name, uuid }: OverviewTableRow) {
 			return (
 				<>
 					<AUILink to={`${uuid}/instellingen`} component={Link}>
-						<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
+						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 					</AUILink>
-					{description && (
-						<p className="u-text-light u-margin-top-xs">
+					<p className="small">
+						[{name}]{' '}
+						{description ? (
 							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
-						</p>
-					)}
+						) : (
+							<span className="u-text-italic">
+								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+							</span>
+						)}
+					</p>
 				</>
 			);
 		},
