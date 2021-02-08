@@ -47,6 +47,7 @@ const OverviewView: FC = () => {
 		BREADCRUMB_OPTIONS(generatePath)
 	);
 	const { loading, pagination } = contentTypesConnector.hooks.usePaginatedPresets(query);
+	const presetListPaginator = contentTypesConnector.presetsFacade.listPaginator;
 
 	// Set initial loading
 	useEffect(() => {
@@ -55,11 +56,13 @@ const OverviewView: FC = () => {
 		}
 	}, [initialLoading, loading]);
 
-	// Set initial values with query params
+	// Set initial values with query params & clear presets cache
 	useEffect(() => {
 		if (query.search) {
 			setFilterFormState({ ...filterFormState, name: query.search });
 		}
+
+		presetListPaginator.clearCache();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**
@@ -135,7 +138,9 @@ const OverviewView: FC = () => {
 					/>
 				</div>
 				<PaginatedTable
+					fixed
 					className="u-margin-top"
+					tableClassName="a-table--fixed--xs"
 					columns={OVERVIEW_COLUMNS(t)}
 					rows={customCCRows}
 					currentPage={pagination?.currentPage || 1}

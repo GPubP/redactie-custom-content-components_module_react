@@ -28,6 +28,7 @@ const AddCCForm: FC<AddCCFormProps> = ({
 				<div className={classnames(className, 'row')}>
 					<div className="col-xs-12 col-md u-margin-bottom-xs">
 						<Field
+							required
 							id="fieldType"
 							label="Selecteer"
 							name="fieldType"
@@ -37,10 +38,12 @@ const AddCCForm: FC<AddCCFormProps> = ({
 						<small className="u-block u-text-light u-margin-top-xs">
 							Selecteer een content component van een bepaald type.
 						</small>
+						<ErrorMessage name="fieldType" />
 					</div>
 
 					<div className="col-xs-12 col-md u-margin-bottom-xs">
 						<Field
+							required
 							as={TextField}
 							description="Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld 'Titel'."
 							id="name"
