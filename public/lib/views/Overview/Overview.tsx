@@ -122,7 +122,7 @@ const OverviewView: FC = () => {
 			label: preset.data.label,
 			name: preset.data.name,
 			description: preset.data.description,
-			active: true,
+			active: preset.meta.active,
 			navigate,
 		}));
 
