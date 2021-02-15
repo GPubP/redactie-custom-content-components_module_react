@@ -1,7 +1,7 @@
 import { BreadcrumbOptions } from '@redactie/redactie-core';
-import { NavigateGenerateFn } from '@redactie/utils';
+import { ContextHeaderBadge, NavigateGenerateFn } from '@redactie/utils';
 
-import { ContextHeaderBadge, Tab } from './customCC.types';
+import { Tab } from './customCC.types';
 
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/content-componenten';
@@ -101,7 +101,7 @@ export const CUSTOM_CC_DETAIL_TABS: Tab[] = [
 export const CONTEXT_HEADER_ROUTE_BAGES: Record<'detailCC', ContextHeaderBadge[]> = {
 	detailCC: [
 		{
-			name: 'CONTENT COMPONENTEN',
+			name: 'Content component',
 			type: 'primary',
 		},
 	],

@@ -91,8 +91,3 @@ export interface SelectOption {
 export interface TabsLinkProps {
 	href: string;
 }
-
-export interface ContextHeaderBadge {
-	name: string;
-	type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
-}
