@@ -5,6 +5,7 @@ import {
 	PresetListModel,
 } from '@redactie/content-types-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { ContextHeaderTab } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
@@ -69,12 +70,7 @@ export interface FilterItem {
 	value: string;
 }
 
-export interface Tab {
-	id?: string;
-	name: string;
-	target: string;
-	active: boolean;
-	disabled?: boolean;
+export interface Tab extends ContextHeaderTab {
 	containerId: string;
 }
 

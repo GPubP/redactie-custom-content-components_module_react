@@ -83,12 +83,14 @@ export const CUSTOM_CC_DETAIL_TAB_MAP = {
 		name: 'Instellingen',
 		target: 'instellingen',
 		active: true,
+		disabled: false,
 		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	contentComponents: {
 		name: 'Content Componenten',
 		target: 'content-componenten',
 		active: false,
+		disabled: false,
 		containerId: ALERT_CONTAINER_IDS.detailCC,
 	},
 };
