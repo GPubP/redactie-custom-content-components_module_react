@@ -71,7 +71,10 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 		}
 
 		return activeRouteConfig.title(activePreset, activeField, dynamicActiveField, t);
-	}, [activeField, activePreset, activeRouteConfig, dynamicActiveField, t]);
+		// The t function will be redefined on every render cycle
+		// That is why we don't add it to the dependency array
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeField, activePreset, activeRouteConfig, dynamicActiveField]);
 
 	const pageBadges: ContextHeaderBadge = useMemo(() => {
 		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
