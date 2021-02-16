@@ -6,6 +6,7 @@ import {
 import { PresetDetailModel } from '@redactie/content-types-module';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
+	ContextHeaderBadge,
 	DataLoader,
 	RenderChildRoutes,
 	useActiveRouteConfig,
@@ -17,10 +18,10 @@ import {
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { contentTypesConnector } from '../../connectors';
+import { contentTypesConnector, useCoreTranslation } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
 import { RouteProps, Tab, TabsLinkProps } from '../../customCC.types';
-import { useActiveField, useActiveTabs, useDynamicField } from '../../hooks';
+import { useActiveField, useActiveTabs, useDynamicActiveField } from '../../hooks';
 
 import { DEFAULT_PRESET_SEARCH_PARAMS } from './Update.const';
 
@@ -34,7 +35,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 
 	const { tenantId } = useTenantContext();
 	const { generatePath, navigate } = useNavigate();
-
+	const [t] = useCoreTranslation();
 	const [initialLoading, setInitialLoading] = useState(true);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
@@ -48,7 +49,8 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const dynamicField = useDynamicField();
+
+	const dynamicActiveField = useDynamicActiveField();
 	const activeField = useActiveField();
 	const [activePreset] = contentTypesConnector.hooks.usePreset(
 		presetUuid,
@@ -63,13 +65,26 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 		BFF_MODULE_PUBLIC_PATH
 	);
 
-	const pageTitle = useMemo(() => {
+	const pageTitle: ReactElement | undefined = useMemo(() => {
 		if (!activeRouteConfig || typeof activeRouteConfig.title !== 'function') {
 			return;
 		}
 
-		return activeRouteConfig.title(activePreset, activeField, dynamicField);
-	}, [activeField, activePreset, activeRouteConfig, dynamicField]);
+		return activeRouteConfig.title(activePreset, activeField, dynamicActiveField, t);
+		// The t function will be redefined on every render cycle
+		// That is why we don't add it to the dependency array
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeField, activePreset, activeRouteConfig, dynamicActiveField]);
+
+	const pageBadges: ContextHeaderBadge = useMemo(() => {
+		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
+			return [];
+		}
+
+		return activeRouteConfig.badges(activeField, dynamicActiveField);
+	}, [activeField, activeRouteConfig, dynamicActiveField]);
+
+	const pageTabs = showTabs ? activeTabs : [];
 
 	// Fetch fieldTypes and presets
 	useEffect(() => {
@@ -158,8 +173,8 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 					}),
 					component: Link,
 				})}
-				tabs={showTabs && activeTabs}
-				badges={activeRouteConfig && activeRouteConfig.badges}
+				tabs={pageTabs}
+				badges={pageBadges}
 				title={pageTitle}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
