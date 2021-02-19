@@ -65,24 +65,15 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 		BFF_MODULE_PUBLIC_PATH
 	);
 
-	const pageTitle: ReactElement | undefined = useMemo(() => {
-		if (!activeRouteConfig || typeof activeRouteConfig.title !== 'function') {
-			return;
-		}
+	const pageTitle: ReactElement | undefined =
+		typeof activeRouteConfig?.title === 'function'
+			? activeRouteConfig.title(activePreset, activeField, dynamicActiveField, t)
+			: '';
 
-		return activeRouteConfig.title(activePreset, activeField, dynamicActiveField, t);
-		// The t function will be redefined on every render cycle
-		// That is why we don't add it to the dependency array
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeField, activePreset, activeRouteConfig, dynamicActiveField]);
-
-	const pageBadges: ContextHeaderBadge = useMemo(() => {
-		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
-			return [];
-		}
-
-		return activeRouteConfig.badges(activeField, dynamicActiveField);
-	}, [activeField, activeRouteConfig, dynamicActiveField]);
+	const pageBadges: ContextHeaderBadge =
+		typeof activeRouteConfig?.badges === 'function'
+			? activeRouteConfig.badges(activeField, dynamicActiveField)
+			: [];
 
 	const pageTabs = showTabs ? activeTabs : [];
 

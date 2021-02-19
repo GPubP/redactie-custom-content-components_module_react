@@ -10,13 +10,15 @@ export const getPageBadges = (
 ) => (activeField: Field, activeDynamicField: Field): ContextHeaderBadge[] => {
 	switch (pageType) {
 		case PageType.DynamicField: {
-			const dynamicFieldTypeLabel = activeDynamicField?.fieldType?.data?.label;
+			const dynamicFieldTypeLabel = activeDynamicField?.preset
+				? activeDynamicField?.preset.data.label
+				: activeDynamicField?.fieldType?.data.label;
 
 			return dynamicFieldTypeLabel
 				? [
 						...defaultBadges,
 						{
-							name: activeDynamicField?.fieldType?.data?.label,
+							name: dynamicFieldTypeLabel,
 							type: 'primary',
 						},
 				  ]
