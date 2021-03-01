@@ -1,6 +1,7 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
+import { TableColumn } from '@redactie/utils';
 import { isNil } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -8,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { StatusIcon } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS, TENANT_ROOT } from '../../customCC.const';
-import { TableColumn } from '../../customCC.types';
 
 import { DetailCCRowData } from './DetailCC.types';
 
@@ -21,28 +21,27 @@ export const DETAIL_CC_COLUMNS = (
 		value: 'label',
 		disableSorting: true,
 		width: '35%',
-		component(value: string, rowData: DetailCCRowData) {
-			const { name, path } = rowData;
+		component(value: string, { canMoveDown, canMoveUp, id, name, path }) {
 			return (
 				<div className="u-flex u-flex-align-center u-flex-no-wrap">
 					<ButtonGroup direction="vertical">
 						<Button
 							ariaLabel="Move item up"
-							disabled={!rowData.canMoveUp}
+							disabled={!canMoveUp}
 							htmlType="button"
 							icon="chevron-up"
 							negative
-							onClick={() => moveRow(rowData.id, -1)}
+							onClick={() => moveRow(id, -1)}
 							size="tiny"
 							transparent
 						/>
 						<Button
 							ariaLabel="Move item down"
-							disabled={!rowData.canMoveDown}
+							disabled={!canMoveDown}
 							htmlType="button"
 							icon="chevron-down"
 							negative
-							onClick={() => moveRow(rowData.id, 1)}
+							onClick={() => moveRow(id, 1)}
 							size="tiny"
 							transparent
 						/>
@@ -79,10 +78,8 @@ export const DETAIL_CC_COLUMNS = (
 		value: 'multiple',
 		disableSorting: true,
 		classList: ['u-text-center'],
-		component(value: any, rowData: DetailCCRowData) {
-			return !isNil(rowData.multiple) ? (
-				<StatusIcon active={rowData.multiple ?? false} />
-			) : null;
+		component(multiple: boolean) {
+			return !isNil(multiple) ? <StatusIcon active={multiple ?? false} /> : null;
 		},
 		width: '10%',
 	},
@@ -91,10 +88,8 @@ export const DETAIL_CC_COLUMNS = (
 		value: 'required',
 		classList: ['u-text-center'],
 		disableSorting: true,
-		component(value: any, rowData: DetailCCRowData) {
-			return !isNil(rowData.required) ? (
-				<StatusIcon active={rowData.required ?? false} />
-			) : null;
+		component(required: boolean) {
+			return !isNil(required) ? <StatusIcon active={required ?? false} /> : null;
 		},
 		width: '10%',
 	},
@@ -104,10 +99,8 @@ export const DETAIL_CC_COLUMNS = (
 		disableSorting: true,
 		classList: ['u-text-center'],
 		width: '10%',
-		component(value: any, rowData: DetailCCRowData) {
-			return !isNil(rowData.translatable) ? (
-				<StatusIcon active={rowData.translatable ?? false} />
-			) : null;
+		component(translatable: boolean) {
+			return !isNil(translatable) ? <StatusIcon active={translatable ?? false} /> : null;
 		},
 	},
 	{
@@ -116,8 +109,8 @@ export const DETAIL_CC_COLUMNS = (
 		disableSorting: true,
 		classList: ['u-text-center'],
 		width: '10%',
-		component(value: any, rowData: DetailCCRowData) {
-			return !isNil(rowData.hidden) ? <StatusIcon active={rowData.hidden ?? false} /> : null;
+		component(hidden: boolean) {
+			return !isNil(hidden) ? <StatusIcon active={hidden ?? false} /> : null;
 		},
 	},
 	{
@@ -125,12 +118,12 @@ export const DETAIL_CC_COLUMNS = (
 		disableSorting: true,
 		classList: ['is-condensed', 'u-text-right'],
 		width: '10%',
-		component(value: any, rowData: DetailCCRowData) {
+		component(value, { navigate }) {
 			return (
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={rowData.navigate}
+					onClick={navigate}
 					type="primary"
 					transparent
 				/>

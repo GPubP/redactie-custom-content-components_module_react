@@ -7,6 +7,7 @@ import { CreatePresetPayload } from '@redactie/content-types-module';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
+	ContextHeaderTabLinkProps,
 	DataLoader,
 	RenderChildRoutes,
 	useNavigate,
@@ -24,7 +25,7 @@ import {
 	CUSTOM_CC_DETAIL_TABS,
 	MODULE_PATHS,
 } from '../../customCC.const';
-import { RouteProps, TabsLinkProps } from '../../customCC.types';
+import { RouteProps } from '../../customCC.types';
 import { useActiveTabs } from '../../hooks';
 
 import { CUSTOM_CC_SETTINGS_CREATE_ALLOWED_PATHS } from './Create.const';
@@ -115,7 +116,7 @@ const CreateView: FC<RouteProps> = ({ location, route }) => {
 		<>
 			<ContextHeader
 				tabs={activeTabs}
-				linkProps={(props: TabsLinkProps) => ({
+				linkProps={(props: ContextHeaderTabLinkProps) => ({
 					...props,
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,

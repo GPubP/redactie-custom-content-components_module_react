@@ -1,8 +1,8 @@
 import { TranslateFunc } from '@redactie/translations-module';
+import { SelectOption } from '@redactie/utils';
 import { object, string } from 'yup';
 
 import { CORE_TRANSLATIONS } from '../../../connectors';
-import { SelectOption } from '../../../customCC.types';
 
 export const FILTER_FORM_VALIDATION_SCHEMA = object().shape({
 	name: string(),

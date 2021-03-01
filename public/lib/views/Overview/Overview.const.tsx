@@ -1,14 +1,13 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip, Status } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
-import { APIQueryParamsConfig } from '@redactie/utils';
+import { APIQueryParamsConfig, TableColumn } from '@redactie/utils';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS } from '../../customCC.const';
-import { TableColumn } from '../../customCC.types';
 
 import { OverviewTableRow } from './Overview.types';
 
@@ -49,7 +48,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		width: '60%',
-		component(label: string, { description, name, uuid }: OverviewTableRow) {
+		component(label: string, { description, name, uuid }) {
 			return (
 				<>
 					<AUILink to={`${uuid}/instellingen`} component={Link}>
@@ -89,7 +88,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		classList: ['u-text-right'],
 		disableSorting: true,
 		width: '20%',
-		component(value: unknown, { navigate, uuid }: OverviewTableRow) {
+		component(value, { navigate, uuid }) {
 			return (
 				<Button
 					ariaLabel="Edit"
