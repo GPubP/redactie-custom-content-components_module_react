@@ -1,4 +1,4 @@
-import { FilterItem } from '../../../customCC.types';
+import { FilterItem } from '@redactie/utils';
 
 export interface FilterFormState {
 	name: string;

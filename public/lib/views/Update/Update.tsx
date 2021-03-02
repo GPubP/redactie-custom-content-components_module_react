@@ -7,6 +7,7 @@ import { PresetDetailModel } from '@redactie/content-types-module';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	ContextHeaderBadge,
+	ContextHeaderTabLinkProps,
 	DataLoader,
 	RenderChildRoutes,
 	useActiveRouteConfig,
@@ -20,7 +21,7 @@ import { Link } from 'react-router-dom';
 
 import { contentTypesConnector, useCoreTranslation } from '../../connectors';
 import { BREADCRUMB_OPTIONS, CUSTOM_CC_DETAIL_TABS, MODULE_PATHS } from '../../customCC.const';
-import { RouteProps, Tab, TabsLinkProps } from '../../customCC.types';
+import { RouteProps, Tab } from '../../customCC.types';
 import { useActiveField, useActiveTabs, useDynamicActiveField } from '../../hooks';
 
 import { DEFAULT_PRESET_SEARCH_PARAMS } from './Update.const';
@@ -157,7 +158,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	return (
 		<>
 			<ContextHeader
-				linkProps={(props: TabsLinkProps) => ({
+				linkProps={(props: ContextHeaderTabLinkProps) => ({
 					...props,
 					to: generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
 						presetUuid,

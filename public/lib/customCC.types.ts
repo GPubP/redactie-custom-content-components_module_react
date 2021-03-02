@@ -6,8 +6,6 @@ import {
 } from '@redactie/content-types-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { ContextHeaderTab } from '@redactie/utils';
-import { FormikProps, FormikValues } from 'formik';
-import { ReactNode } from 'react';
 
 export interface ModuleProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
@@ -47,43 +45,6 @@ export enum PageType {
 	DynamicField,
 }
 
-// TODO: move to utils types
-
-export interface TableColumn<RowData = unknown> {
-	label: string;
-	value?: string;
-	component?: (value: any, rowData: RowData, rowIndex: number) => ReactNode;
-	headerComponent?: (value: any) => ReactNode;
-	format?: (value: any, col: TableColumn<RowData>, rowData: RowData, rowIndex: number) => string;
-	hidden?: boolean;
-	disabled?: boolean;
-	disableSorting?: boolean;
-	classList?: string[];
-	fallback?: string;
-	width?: string;
-	ellipsis?: boolean;
-}
-
-export interface FilterItem {
-	key: string;
-	valuePrefix: string;
-	value: string;
-}
-
 export interface Tab extends ContextHeaderTab {
 	containerId: string;
-}
-
-export type FormikChildrenFn<Values = FormikValues> = (
-	formikProps: FormikProps<Values>
-) => ReactNode;
-
-export interface SelectOption {
-	label: string;
-	value: string;
-	disabled?: boolean;
-}
-
-export interface TabsLinkProps {
-	href: string;
 }

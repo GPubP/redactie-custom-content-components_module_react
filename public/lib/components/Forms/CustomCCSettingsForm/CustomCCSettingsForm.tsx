@@ -1,11 +1,10 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
 import { PresetDetailModel } from '@redactie/content-types-module';
-import { CopyValue, ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
+import { CopyValue, ErrorMessage, FormikChildrenFn, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
 import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors';
-import { FormikChildrenFn } from '../../../customCC.types';
 import { getFieldState } from '../../../helpers';
 
 import { CUSTOM_CC_SETTINGS_VALIDATION_SCHEMA } from './CustomCCSettingsForm.const';

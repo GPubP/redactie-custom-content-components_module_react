@@ -9,6 +9,7 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	DataLoader,
+	FilterItem,
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
@@ -21,7 +22,6 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { FilterForm, FilterFormState } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../customCC.const';
-import { FilterItem } from '../../customCC.types';
 
 import {
 	DEFAULT_FILTER_FORM,
@@ -85,8 +85,8 @@ const OverviewView: FC = () => {
 	};
 
 	const clearFilter = (item: FilterItem): void => {
-		const filterKey = item.key === 'search' ? 'name' : item.key;
-		setQuery({ [item.key]: '' });
+		const filterKey = item.key === 'search' ? 'name' : (item.key as string);
+		setQuery({ [item.key as string]: '' });
 		setFilterFormState({
 			...filterFormState,
 			[filterKey]: '',
