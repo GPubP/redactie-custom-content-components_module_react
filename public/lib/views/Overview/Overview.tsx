@@ -110,7 +110,7 @@ const OverviewView: FC = () => {
 		setQuery({
 			page: 1,
 			search: values.name || undefined,
-			active: values.name ? values.name === FilterFormStatus.Active : undefined,
+			active: values.status ? values.status === FilterFormStatus.Active : undefined,
 		});
 	};
 
