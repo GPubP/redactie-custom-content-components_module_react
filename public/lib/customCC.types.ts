@@ -5,7 +5,7 @@ import {
 	PresetListModel,
 } from '@redactie/content-types-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
-import { ContextHeaderTab } from '@redactie/utils';
+import { ContextHeaderTab, FilterItem } from '@redactie/utils';
 
 export interface ModuleProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
@@ -47,4 +47,8 @@ export enum PageType {
 
 export interface Tab extends ContextHeaderTab {
 	containerId: string;
+}
+
+export interface OverviewFilterItem extends FilterItem {
+	filterKey: string;
 }

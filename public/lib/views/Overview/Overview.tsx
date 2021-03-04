@@ -9,34 +9,30 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	DataLoader,
-	FilterItem,
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
+	SearchParams,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { FilterForm, FilterFormState } from '../../components';
+import { FilterForm, FilterFormState, FilterFormStatus, STATUS_OPTIONS } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../customCC.const';
+import { OverviewFilterItem } from '../../customCC.types';
 
-import {
-	DEFAULT_FILTER_FORM,
-	DEFAULT_OVERVIEW_QUERY_PARAMS,
-	OVERVIEW_COLUMNS,
-} from './Overview.const';
+import { OVERVIEW_COLUMNS, OVERVIEW_QUERY_PARAMS_CONFIG } from './Overview.const';
 import { OverviewTableRow } from './Overview.types';
 
 const OverviewView: FC = () => {
 	/**
 	 * Hooks
 	 */
-	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS, false);
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
 
-	const [filterFormState, setFilterFormState] = useState<FilterFormState>(DEFAULT_FILTER_FORM);
 	const [initialLoading, setInitialLoading] = useState(true);
 
 	const [t] = useCoreTranslation();
@@ -46,7 +42,10 @@ const OverviewView: FC = () => {
 		routes as ModuleRouteConfig[],
 		BREADCRUMB_OPTIONS(generatePath)
 	);
-	const { loading, pagination } = contentTypesConnector.hooks.usePaginatedPresets(query);
+	const { loading, pagination } = contentTypesConnector.hooks.usePaginatedPresets(
+		query as SearchParams,
+		true
+	);
 	const presetListPaginator = contentTypesConnector.presetsFacade.listPaginator;
 
 	// Set initial loading
@@ -56,12 +55,8 @@ const OverviewView: FC = () => {
 		}
 	}, [initialLoading, loading]);
 
-	// Set initial values with query params & clear presets cache
+	// Clear presets cache
 	useEffect(() => {
-		if (query.search) {
-			setFilterFormState({ ...filterFormState, name: query.search });
-		}
-
 		presetListPaginator.clearCache();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -69,34 +64,41 @@ const OverviewView: FC = () => {
 	 * Methods
 	 */
 
-	const createFilters = (values: FilterFormState): FilterItem[] => {
+	const createFilters = ({ name, status }: FilterFormState): OverviewFilterItem[] => {
 		return [
-			{
-				key: 'search',
-				valuePrefix: 'Zoekterm',
-				value: values.name,
-			},
-		].filter(f => !!f.value);
+			...(name
+				? [
+						{
+							filterKey: 'search',
+							valuePrefix: 'Zoekterm',
+							value: name,
+						},
+				  ]
+				: []),
+			...(status
+				? [
+						{
+							filterKey: 'active',
+							valuePrefix: 'Status',
+							value:
+								STATUS_OPTIONS(t).find(option => option.value === status)?.label ||
+								'',
+						},
+				  ]
+				: []),
+		];
 	};
 
 	const clearAllFilters = (): void => {
-		setQuery({ search: '' });
-		setFilterFormState(DEFAULT_FILTER_FORM);
+		setQuery({ page: 1, search: undefined, active: undefined });
 	};
 
-	const clearFilter = (item: FilterItem): void => {
-		const filterKey = item.key === 'search' ? 'name' : (item.key as string);
-		setQuery({ [item.key as string]: '' });
-		setFilterFormState({
-			...filterFormState,
-			[filterKey]: '',
-		});
+	const clearFilter = (item: OverviewFilterItem): void => {
+		setQuery({ page: 1, [item.filterKey]: undefined });
 	};
 
 	const onPageChange = (page: number): void => {
-		setQuery({
-			page,
-		});
+		setQuery({ page });
 	};
 
 	const onOrderBy = ({ key, order }: OrderBy): void => {
@@ -105,11 +107,23 @@ const OverviewView: FC = () => {
 	};
 
 	const onApplyFilters = (values: FilterFormState): void => {
-		setFilterFormState(values);
-		setQuery({ search: values.name });
+		setQuery({
+			page: 1,
+			search: values.name || undefined,
+			active: values.name ? values.name === FilterFormStatus.Active : undefined,
+		});
 	};
 
-	const activeSorting = parseStringToOrderBy(query.sort);
+	const filterFormState: FilterFormState = {
+		name: query.search ?? '',
+		status:
+			typeof query.active === 'boolean'
+				? query.active
+					? FilterFormStatus.Active
+					: FilterFormStatus.NonActive
+				: '',
+	};
+	const activeSorting = parseStringToOrderBy(query.sort ?? '');
 	const activeFilters = createFilters(filterFormState);
 
 	/**

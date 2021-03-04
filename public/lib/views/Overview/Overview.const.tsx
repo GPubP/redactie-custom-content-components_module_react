@@ -1,17 +1,16 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip, Status } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
-import { APIQueryParamsConfig, TableColumn } from '@redactie/utils';
+import { TableColumn } from '@redactie/utils';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS } from '../../customCC.const';
 
 import { OverviewTableRow } from './Overview.types';
 
-export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
+export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 	page: {
 		defaultValue: 1,
 		type: 'number',
@@ -21,12 +20,13 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		type: 'number',
 	},
 	search: {
-		defaultValue: '',
 		type: 'string',
 	},
 	sort: {
-		defaultValue: '',
 		type: 'string',
+	},
+	active: {
+		type: 'boolean',
 	},
 	default: {
 		defaultValue: false,
@@ -36,12 +36,7 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: true,
 		type: 'boolean',
 	},
-};
-
-export const DEFAULT_FILTER_FORM: FilterFormState = {
-	name: '',
-	status: '',
-};
+} as const;
 
 export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow>[] => [
 	{
