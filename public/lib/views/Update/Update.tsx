@@ -16,7 +16,7 @@ import {
 	useRoutes,
 	useTenantContext,
 } from '@redactie/utils';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { contentTypesConnector, useCoreTranslation } from '../../connectors';
@@ -37,6 +37,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	const { tenantId } = useTenantContext();
 	const { generatePath, navigate } = useNavigate();
 	const [t] = useCoreTranslation();
+	const initialPreset = useRef<PresetDetailModel | undefined>();
 	const [initialLoading, setInitialLoading] = useState(true);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
@@ -108,12 +109,27 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 		activePreset,
 	]);
 
+	// Set initial preset
+	useEffect(() => {
+		if (!initialPreset.current && activePreset) {
+			initialPreset.current = activePreset;
+		}
+	}, [activePreset]);
+
 	/**
 	 * Methods
 	 */
 
 	const onCancel = (): void => {
 		navigate(MODULE_PATHS.overview);
+	};
+
+	const onReset = (): void => {
+		// TODO: remove any after content types module bump
+		(contentTypesConnector.presetsFacade as any).updateDetail(
+			presetUuid,
+			initialPreset.current
+		);
 	};
 
 	const onSubmit = (data: PresetDetailModel, tab: Tab): void => {
@@ -143,6 +159,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			preset: activePreset,
 			presets,
 			onCancel,
+			onReset,
 			onSubmit,
 		};
 
