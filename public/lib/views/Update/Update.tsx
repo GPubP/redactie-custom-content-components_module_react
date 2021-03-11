@@ -125,11 +125,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	};
 
 	const onReset = (): void => {
-		// TODO: remove any after content types module bump
-		(contentTypesConnector.presetsFacade as any).updateDetail(
-			presetUuid,
-			initialPreset.current
-		);
+		contentTypesConnector.presetsFacade.updateDetail(presetUuid, initialPreset.current);
 	};
 
 	const onSubmit = (data: PresetDetailModel, tab: Tab): void => {

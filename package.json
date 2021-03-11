@@ -26,7 +26,7 @@
     "url": "ssh://git@git.antwerpen.be/reda/redactie-custom-content-components_module_react.git"
   },
   "publishConfig": {
-    "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private/"
+    "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private"
   },
   "keywords": [
     "Redactie",
@@ -48,7 +48,7 @@
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
     "@datorama/akita": "4.22.0",
-    "@redactie/content-types-module": "0.26.0",
+    "@redactie/content-types-module": "0.26.5",
     "@redactie/react-router-guards": "1.0.2",
     "@redactie/redactie-core": "2.0.0",
     "@redactie/roles-rights-module": "0.8.1",
