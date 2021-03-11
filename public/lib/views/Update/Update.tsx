@@ -125,7 +125,9 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	};
 
 	const onReset = (): void => {
-		contentTypesConnector.presetsFacade.updateDetail(presetUuid, initialPreset.current);
+		if (initialPreset.current) {
+			contentTypesConnector.presetsFacade.updateDetail(presetUuid, initialPreset.current);
+		}
 	};
 
 	const onSubmit = (data: PresetDetailModel, tab: Tab): void => {
