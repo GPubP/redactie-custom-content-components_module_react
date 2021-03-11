@@ -20,6 +20,7 @@ const DetailCCView: FC<DetailRouteProps> = ({
 	preset,
 	presets,
 	onCancel,
+	onReset,
 	onSubmit,
 }) => {
 	const { presetUuid } = match.params;
@@ -190,6 +191,7 @@ const DetailCCView: FC<DetailRouteProps> = ({
 				allowedPaths={DETAIL_CC_ALLOWED_PATHS}
 				shouldBlockNavigationOnConfirm
 				when={fieldsHaveChanged}
+				onDelete={onReset}
 				onConfirm={onCCSave}
 			/>
 		</>

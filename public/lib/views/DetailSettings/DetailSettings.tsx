@@ -27,6 +27,7 @@ import { DetailRouteProps } from '../../customCC.types';
 const DetailSettingsView: FC<DetailRouteProps> = ({
 	allowedPaths,
 	onCancel,
+	onReset,
 	onSubmit,
 	preset,
 	match,
@@ -233,6 +234,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 							when={hasChanges}
 							shouldBlockNavigationOnConfirm
 							onConfirm={submitForm}
+							onDelete={onReset}
 						/>
 					</>
 				)}
