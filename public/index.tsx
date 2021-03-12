@@ -3,7 +3,7 @@ import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
 import { DynamicFieldBreadCrumb, PresetBreadCrumb } from './lib/components';
-import { contentTypesConnector } from './lib/connectors';
+import { contentTypesConnector, rolesRightsConnector } from './lib/connectors';
 import { MODULE_PATHS } from './lib/customCC.const';
 import { ModuleProps, PageType } from './lib/customCC.types';
 import { getPageBadges, getPageTitle } from './lib/helpers';
@@ -33,10 +33,22 @@ Core.routes.register({
 	path: MODULE_PATHS.root,
 	component: CustomCCComponent,
 	breadcrumb: false,
+	guardOptions: {
+		guards: [
+			rolesRightsConnector.api.guards.securityRightsTenantGuard([
+				rolesRightsConnector.securityRights.read,
+			]),
+		],
+	},
 	navigation: {
 		label: 'Content componenten',
 		order: 1,
 		parentPath: MODULE_PATHS.contentTypes,
+		canShown: [
+			rolesRightsConnector.api.canShowns.securityRightsTenantCanShown([
+				rolesRightsConnector.securityRights.read,
+			]),
+		],
 	},
 	redirect: MODULE_PATHS.overview,
 	routes: [
@@ -50,6 +62,13 @@ Core.routes.register({
 			component: CreateView,
 			breadcrumb: false,
 			redirect: MODULE_PATHS.createSettings,
+			guardOptions: {
+				guards: [
+					rolesRightsConnector.api.guards.securityRightsTenantGuard([
+						rolesRightsConnector.securityRights.create,
+					]),
+				],
+			},
 			routes: [
 				{
 					path: MODULE_PATHS.createSettings,
