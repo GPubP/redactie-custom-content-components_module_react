@@ -11,18 +11,7 @@ import { MODULE_PATHS } from '../../customCC.const';
 import { OverviewTableRow } from './Overview.types';
 
 export const OVERVIEW_QUERY_PARAMS_CONFIG = {
-	page: {
-		defaultValue: 1,
-		type: 'number',
-	},
-	pagesize: {
-		defaultValue: 10,
-		type: 'number',
-	},
 	search: {
-		type: 'string',
-	},
-	sort: {
 		type: 'string',
 	},
 	active: {

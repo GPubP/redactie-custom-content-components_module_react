@@ -10,8 +10,8 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	DataLoader,
 	OrderBy,
-	parseOrderByToString,
-	parseStringToOrderBy,
+	parseObjToOrderBy,
+	parseOrderByToObj,
 	SearchParams,
 	useAPIQueryParams,
 	useNavigate,
@@ -31,7 +31,7 @@ const OverviewView: FC = () => {
 	/**
 	 * Hooks
 	 */
-	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG);
 
 	const [initialLoading, setInitialLoading] = useState(true);
 
@@ -102,8 +102,7 @@ const OverviewView: FC = () => {
 	};
 
 	const onOrderBy = ({ key, order }: OrderBy): void => {
-		const prefixedOrderBy = { order, key: `data.${key}` };
-		setQuery({ sort: parseOrderByToString(prefixedOrderBy) });
+		setQuery(parseOrderByToObj({ order, key: `data.${key}` }));
 	};
 
 	const onApplyFilters = (values: FilterFormState): void => {
@@ -123,7 +122,10 @@ const OverviewView: FC = () => {
 					: FilterFormStatus.NonActive
 				: '',
 	};
-	const activeSorting = parseStringToOrderBy(query.sort ?? '');
+	const activeSorting = parseObjToOrderBy({
+		sort: query.sort ? query.sort.split('.')[1] : '',
+		direction: query.direction ?? 1,
+	});
 	const activeFilters = createFilters(filterFormState);
 
 	/**
