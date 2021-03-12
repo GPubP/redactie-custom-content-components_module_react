@@ -22,9 +22,6 @@ export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 	search: {
 		type: 'string',
 	},
-	sort: {
-		type: 'string',
-	},
 	active: {
 		type: 'boolean',
 	},
