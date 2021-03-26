@@ -3,7 +3,6 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { PresetDetailFieldModel } from '@redactie/content-types-module';
 import {
 	AlertContainer,
-	alertService,
 	DataLoader,
 	LeavePrompt,
 	RenderChildRoutes,
@@ -23,6 +22,7 @@ import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '..
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 import { filterCompartments, generateFieldFromType } from '../../helpers';
+import { showCompartmentErrorAlert } from '../../helpers/showAlert';
 import {
 	useActiveField,
 	useCompartments,
@@ -229,13 +229,7 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
 			navigateToDetail();
 		} else {
-			alertService.danger(
-				{
-					title: 'Er zijn nog fouten',
-					message: '',
-				},
-				{ containerId: ALERT_CONTAINER_IDS.detailCCNewDynamicField }
-			);
+			showCompartmentErrorAlert({ containerId: ALERT_CONTAINER_IDS.detailCCNewDynamicField });
 		}
 
 		setHasSubmit(true);
