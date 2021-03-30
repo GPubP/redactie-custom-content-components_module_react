@@ -7,7 +7,6 @@ import {
 } from '@redactie/content-types-module';
 import {
 	AlertContainer,
-	alertService,
 	DataLoader,
 	LeavePrompt,
 	RenderChildRoutes,
@@ -24,6 +23,7 @@ import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '..
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 import { filterCompartments } from '../../helpers';
+import { showCompartmentErrorAlert } from '../../helpers/showAlert';
 import {
 	useActiveField,
 	useCompartments,
@@ -230,13 +230,7 @@ const DetailCCUpdateDynamicFieldView: FC<DetailRouteProps> = ({
 			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
 			navigateToDetail();
 		} else {
-			alertService.danger(
-				{
-					title: 'Er zijn nog fouten',
-					message: '',
-				},
-				{ containerId: ALERT_CONTAINER_IDS.detailCCUpdateDynamicField }
-			);
+			showCompartmentErrorAlert({ containerId: ALERT_CONTAINER_IDS.detailCCUpdateDynamicField });
 		}
 
 		setHasSubmit(false);
