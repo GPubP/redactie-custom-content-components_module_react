@@ -117,10 +117,7 @@ export class DynamicFieldFacade {
 				validation: {
 					...activeField.validation,
 					...payload.validation,
-					checks: [
-						...(activeField.validation?.checks || []),
-						...(payload.validation?.checks || []),
-					],
+					checks: payload.validation?.checks || activeField.validation?.checks || [],
 				},
 				defaultValue: clearDefaultValue
 					? undefined
