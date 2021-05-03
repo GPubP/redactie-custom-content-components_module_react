@@ -4,6 +4,7 @@ import { PresetDetailFieldModel } from '@redactie/content-types-module';
 import {
 	AlertContainer,
 	DataLoader,
+	DeletePrompt,
 	LeavePrompt,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
@@ -39,6 +40,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 	 * Hooks
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(true);
 	const [invalidCCUuid, setInvalidCCUuid] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
@@ -129,11 +131,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 	};
 
 	const onFieldDelete = (): void => {
-		if (activeField?.uuid) {
-			contentTypesConnector.presetsFacade.deleteField(presetUuid, activeField.uuid);
-			uiFacade.clearActiveField();
-			navigateToDetailCC();
-		}
+		setShowDeleteModal(true);
 	};
 
 	const onFieldSubmit = (): void => {
@@ -165,6 +163,18 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 		}
 
 		setHasSubmit(true);
+	};
+
+	const onDeletePromptConfirm = (): void => {
+		if (activeField?.uuid) {
+			contentTypesConnector.presetsFacade.deleteField(presetUuid, activeField.uuid);
+			uiFacade.clearActiveField();
+			navigateToDetailCC();
+		}
+	};
+
+	const onDeletePromptCancel = (): void => {
+		setShowDeleteModal(false);
 	};
 
 	/**
@@ -256,6 +266,11 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 					onConfirm={onFieldSubmit}
 					shouldBlockNavigationOnConfirm
 					when={hasChanges}
+				/>
+				<DeletePrompt
+					show={showDeleteModal}
+					onCancel={onDeletePromptCancel}
+					onConfirm={onDeletePromptConfirm}
 				/>
 			</>
 		);
