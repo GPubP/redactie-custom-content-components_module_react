@@ -82,7 +82,9 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	// Fetch fieldTypes and presets
 	useEffect(() => {
 		contentTypesConnector.fieldTypesFacade.getFieldTypes();
-		contentTypesConnector.presetsFacade.getPresets();
+		contentTypesConnector.presetsFacade.getPresets(undefined, {
+			forceReload: true,
+		});
 	}, []);
 
 	// Set initial loading
