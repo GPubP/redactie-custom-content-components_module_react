@@ -10,7 +10,7 @@ export const getPageTitle = (pageType: PageType) => (
 	t: (keys: string | string[]) => string
 ) => {
 	const getTitleElement = (label?: string): string =>
-		`${label ? `'${label}` : 'Content component'} ${t(CORE_TRANSLATIONS.ROUTING_UPDATE)}`;
+		`${label ? `'${label}'` : 'Content component'} ${t(CORE_TRANSLATIONS.ROUTING_UPDATE)}`;
 
 	switch (pageType) {
 		case PageType.DynamicField:
