@@ -269,8 +269,8 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 						<Button onClick={navigateToDetailCC} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
-						<Button className="u-margin-left-xs" onClick={onFieldSubmit} type="success">
-							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+						<Button className="u-margin-left-xs" onClick={onFieldSubmit} type="info">
+							{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 						</Button>
 					</div>
 				</ActionBarContentSection>
