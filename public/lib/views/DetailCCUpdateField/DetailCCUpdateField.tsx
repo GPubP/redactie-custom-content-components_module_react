@@ -254,9 +254,10 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 							<Button
 								className="u-margin-left-xs"
 								onClick={onFieldSubmit}
-								type="success"
+								type="info"
+								disabled={!hasChanges}
 							>
-								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 							</Button>
 						</div>
 					</ActionBarContentSection>
