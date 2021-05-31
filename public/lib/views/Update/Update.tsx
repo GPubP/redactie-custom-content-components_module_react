@@ -122,8 +122,12 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 	 * Methods
 	 */
 
-	const onCancel = (): void => {
+	const navigateToOverview = (): void => {
 		navigate(MODULE_PATHS.overview);
+	}
+
+	const onCancel = (): void => {
+		navigateToOverview();
 	};
 
 	const onReset = (): void => {
@@ -148,6 +152,22 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			.finally(() => resetChangeDetection());
 	};
 
+	const onDelete = (data: PresetDetailModel): void => {
+		contentTypesConnector.presetsFacade
+			.updatePreset(
+				{
+					uuid: data.uuid,
+					body: {
+						data: data.data,
+						meta: {
+							deleted: true,
+						},
+					} as any,
+				},
+			)
+			.finally(() => navigateToOverview());
+	};
+
 	/**
 	 * Render
 	 */
@@ -161,6 +181,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 			onCancel,
 			onReset,
 			onSubmit,
+			onDelete,
 		};
 
 		return (
