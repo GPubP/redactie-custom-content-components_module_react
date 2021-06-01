@@ -37,6 +37,7 @@ export interface DetailRouteProps<Params = CustomCCDetailRouteParams>
 	readonly create: boolean;
 	onCancel: () => void;
 	onReset: () => void;
+	onDelete: (data: CreatePresetPayload['data'] | PresetDetailModel) => void;
 	onSubmit: (data: CreatePresetPayload['data'] | PresetDetailModel, tab: Tab) => void;
 }
 

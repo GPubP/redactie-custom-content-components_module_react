@@ -11,6 +11,7 @@ import { PresetDetailModel } from '@redactie/content-types-module';
 import {
 	AlertContainer,
 	alertService,
+	DeletePrompt,
 	LeavePrompt,
 	useDetectValueChangesWorker,
 	useNavigate,
@@ -29,6 +30,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 	onCancel,
 	onReset,
 	onSubmit,
+	onDelete,
 	preset,
 	match,
 	create,
@@ -54,6 +56,7 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 	/**
 	 * Methods
@@ -96,6 +99,16 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 		preset.meta.active
 			? contentTypesConnector.presetsFacade.deactivatePreset(presetUuid)
 			: contentTypesConnector.presetsFacade.activatePreset(presetUuid);
+	};
+
+	const onDeletePromptConfirm = (): void => {
+		if (onDelete) {
+			onDelete(preset);
+		}
+	};
+
+	const onDeletePromptCancel = (): void => {
+		setShowDeleteModal(false);
 	};
 
 	const getLoadingStateBtnProps = (
@@ -182,6 +195,18 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 							{t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
+					{
+						occurrencesCount === 0 && (
+							<Button
+								onClick={() => setShowDeleteModal(true)}
+								className="u-margin-top"
+								type="danger"
+								iconLeft="trash-o"
+							>
+								{t(CORE_TRANSLATIONS['BUTTON_REMOVE'])}
+							</Button>
+						)
+					}
 				</CardBody>
 			</Card>
 		);
@@ -235,6 +260,13 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 							shouldBlockNavigationOnConfirm
 							onConfirm={submitForm}
 							onDelete={onReset}
+						/>
+						<DeletePrompt
+							body="Ben je zeker dat je deze custom content component wil verwijderen? Dit kan niet ongedaan gemaakt worden."
+							isDeleting={isLoading}
+							show={showDeleteModal}
+							onCancel={onDeletePromptCancel}
+							onConfirm={onDeletePromptConfirm}
 						/>
 					</>
 				)}
