@@ -124,7 +124,7 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 
 	const navigateToOverview = (): void => {
 		navigate(MODULE_PATHS.overview);
-	}
+	};
 
 	const onCancel = (): void => {
 		navigateToOverview();
@@ -154,17 +154,15 @@ const UpdateView: FC<RouteProps> = ({ location, route, match }) => {
 
 	const onDelete = (data: PresetDetailModel): void => {
 		contentTypesConnector.presetsFacade
-			.updatePreset(
-				{
-					uuid: data.uuid,
-					body: {
-						data: data.data,
-						meta: {
-							deleted: true,
-						},
-					} as any,
-				},
-			)
+			.updatePreset({
+				uuid: data.uuid,
+				body: {
+					data: data.data,
+					meta: {
+						deleted: true,
+					},
+				} as any,
+			})
 			.finally(() => navigateToOverview());
 	};
 
