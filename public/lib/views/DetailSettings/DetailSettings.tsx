@@ -195,18 +195,16 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 							{t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
-					{
-						occurrencesCount === 0 && (
-							<Button
-								onClick={() => setShowDeleteModal(true)}
-								className="u-margin-top"
-								type="danger"
-								iconLeft="trash-o"
-							>
-								{t(CORE_TRANSLATIONS['BUTTON_REMOVE'])}
-							</Button>
-						)
-					}
+					{occurrencesCount === 0 && (
+						<Button
+							onClick={() => setShowDeleteModal(true)}
+							className="u-margin-top"
+							type="danger"
+							iconLeft="trash-o"
+						>
+							{t(CORE_TRANSLATIONS['BUTTON_REMOVE'])}
+						</Button>
+					)}
 				</CardBody>
 			</Card>
 		);

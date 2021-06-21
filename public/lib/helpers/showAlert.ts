@@ -1,5 +1,4 @@
-import { alertService } from "@redactie/utils";
-import { ALERT_CONTAINER_IDS } from "../customCC.const";
+import { alertService } from '@redactie/utils';
 
 const COMPARTMENT_ERROR_DEFAULTS = {
 	title: 'Opgelet',
@@ -11,6 +10,10 @@ export const showCompartmentErrorAlert = ({
 	title = COMPARTMENT_ERROR_DEFAULTS.title,
 	message = COMPARTMENT_ERROR_DEFAULTS.message,
 	containerId,
-}: { title?: string, message?: string, containerId: string }): void => {
+}: {
+	title?: string;
+	message?: string;
+	containerId: string;
+}): void => {
 	alertService.danger({ title, message }, { containerId });
 };
