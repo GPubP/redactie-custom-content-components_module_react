@@ -58,6 +58,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 	const locationState = location.state ?? {
 		keepActiveField: false,
 	};
+	const keepActiveField = locationState.keepActiveField || false;
 	const [hasChanges] = useDetectValueChangesWorker(
 		!initialLoading,
 		activeField,
@@ -118,7 +119,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 	// Create active field
 	useEffect(() => {
 		if (
-			!locationState.keepActiveField &&
+			!keepActiveField &&
 			((!fieldType && !preset) ||
 				(fieldType && !preset && queryParams.fieldType !== fieldType.uuid) ||
 				(preset && queryParams.preset !== preset.uuid))
@@ -131,7 +132,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 		// ContentTypesCCNew view
 		// We can not generate a new field because when we do, all changes on the current active
 		// field will be lost
-		if (fieldType?.data?.generalConfig && !locationState.keepActiveField) {
+		if (fieldType?.data?.generalConfig && !keepActiveField) {
 			const initialValues = {
 				label: queryParams.name || fieldType.data.generalConfig.defaultLabel || '',
 				name: kebabCase(queryParams.name || ''),
@@ -144,7 +145,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fieldType, locationState.keepActiveField, preset, queryParams.name]);
+	}, [fieldType, keepActiveField, preset, queryParams.name]);
 
 	/**
 	 * Methods
