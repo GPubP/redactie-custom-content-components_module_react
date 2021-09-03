@@ -42,7 +42,7 @@ Core.routes.register({
 	},
 	navigation: {
 		label: 'Content componenten',
-		order: 1,
+		order: 2,
 		parentPath: MODULE_PATHS.contentTypes,
 		canShown: [
 			rolesRightsConnector.api.canShowns.securityRightsTenantCanShown([

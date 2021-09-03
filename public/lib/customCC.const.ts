@@ -15,7 +15,7 @@ export const DYNAMIC_FIELD_UPDATE_PATH = `${DYNAMIC_FIELD_BASE_PATH}/:dynamicCon
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
-	contentTypes: '/content-types',
+	contentTypes: '/:ctType(content-types|content-blokken)',
 
 	root,
 	overview: `${root}/overzicht`,
