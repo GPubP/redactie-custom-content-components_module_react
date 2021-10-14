@@ -138,18 +138,18 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 
 		const statusText = preset.meta?.active ? (
 			occurrencesCount > 0 ? (
-				<p> {text} en kan daarom niet gedeactiveerd worden.</p>
+				<> {text} en kan daarom niet gedeactiveerd worden.</>
 			) : (
-				<p>
+				<>
 					{text}. Deactiveer deze component indien je hem tijdelijk niet meer wil kunnen
 					toevoegen aan nieuwe content types.
-				</p>
+				</>
 			)
 		) : (
-			<p>
+			<>
 				{text}. Activeer deze component indien je hem wil kunnen toevoegen aan niewe content
 				types.
-			</p>
+			</>
 		);
 
 		return (
