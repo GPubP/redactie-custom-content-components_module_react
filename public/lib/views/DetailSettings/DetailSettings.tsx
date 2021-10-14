@@ -165,7 +165,8 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 								<li key={`${index}_${occurrence.uuid}`}>
 									<AUILink
 										to={generatePath(
-											`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`
+											`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`,
+											{ ctType: 'content-types' }
 										)}
 										component={Link}
 									>
