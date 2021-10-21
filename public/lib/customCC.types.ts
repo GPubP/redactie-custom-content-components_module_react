@@ -54,3 +54,8 @@ export interface Tab extends ContextHeaderTab {
 export interface OverviewFilterItem extends FilterItem {
 	filterKey: string;
 }
+
+export enum CtTypes {
+	contentTypes = 'content-types',
+	contentBlocks = 'content-blokken',
+}

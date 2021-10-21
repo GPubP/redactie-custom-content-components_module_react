@@ -23,7 +23,7 @@ import { Link } from 'react-router-dom';
 import { CustomCCSettingsForm, PresetStatus } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP, MODULE_PATHS } from '../../customCC.const';
-import { DetailRouteProps } from '../../customCC.types';
+import { CtTypes, DetailRouteProps } from '../../customCC.types';
 
 const DetailSettingsView: FC<DetailRouteProps> = ({
 	allowedPaths,
@@ -166,7 +166,11 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 									<AUILink
 										to={generatePath(
 											`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`,
-											{ ctType: 'content-types' }
+											{
+												ctType: occurrence.canBeFiltered
+													? CtTypes.contentTypes
+													: CtTypes.contentBlocks,
+											}
 										)}
 										component={Link}
 									>
