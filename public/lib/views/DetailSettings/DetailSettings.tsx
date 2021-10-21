@@ -23,7 +23,7 @@ import { Link } from 'react-router-dom';
 import { CustomCCSettingsForm, PresetStatus } from '../../components';
 import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { ALERT_CONTAINER_IDS, CUSTOM_CC_DETAIL_TAB_MAP, MODULE_PATHS } from '../../customCC.const';
-import { DetailRouteProps } from '../../customCC.types';
+import { CtTypes, DetailRouteProps } from '../../customCC.types';
 
 const DetailSettingsView: FC<DetailRouteProps> = ({
 	allowedPaths,
@@ -138,18 +138,18 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 
 		const statusText = preset.meta?.active ? (
 			occurrencesCount > 0 ? (
-				<p> {text} en kan daarom niet gedeactiveerd worden.</p>
+				<> {text} en kan daarom niet gedeactiveerd worden.</>
 			) : (
-				<p>
+				<>
 					{text}. Deactiveer deze component indien je hem tijdelijk niet meer wil kunnen
 					toevoegen aan nieuwe content types.
-				</p>
+				</>
 			)
 		) : (
-			<p>
+			<>
 				{text}. Activeer deze component indien je hem wil kunnen toevoegen aan niewe content
 				types.
-			</p>
+			</>
 		);
 
 		return (
@@ -165,7 +165,12 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 								<li key={`${index}_${occurrence.uuid}`}>
 									<AUILink
 										to={generatePath(
-											`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`
+											`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`,
+											{
+												ctType: occurrence.canBeFiltered
+													? CtTypes.contentTypes
+													: CtTypes.contentBlocks,
+											}
 										)}
 										component={Link}
 									>
