@@ -167,7 +167,8 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 										to={generatePath(
 											`${MODULE_PATHS.contentTypes}/${occurrence.uuid}/content-componenten`,
 											{
-												ctType: occurrence.canBeFiltered
+												// TODO: fix type
+												ctType: (occurrence as any).canBeFiltered
 													? CtTypes.contentTypes
 													: CtTypes.contentBlocks,
 											}
