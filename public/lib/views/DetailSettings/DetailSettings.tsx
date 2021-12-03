@@ -141,14 +141,21 @@ const DetailSettingsView: FC<DetailRouteProps> = ({
 				<> {text} en kan daarom niet gedeactiveerd worden.</>
 			) : (
 				<>
-					{text}. Deactiveer deze component indien je hem tijdelijk niet meer wil kunnen
-					toevoegen aan nieuwe content types.
+					<p>{text}.</p>
+					<p>
+						Deactiveer deze component indien hij (tijdelijk) niet meer mag toegevoegd
+						worden aan nieuwe content types.
+					</p>
+					<p>
+						De component blijft nog actief of plaatsen waar hij in het verleden werd
+						toegevoegd.
+					</p>
 				</>
 			)
 		) : (
 			<>
-				{text}. Activeer deze component indien je hem wil kunnen toevoegen aan niewe content
-				types.
+				{text}. Activeer deze component indien je hem wil kunnen toevoegen aan nieuwe
+				content types.
 			</>
 		);
 
