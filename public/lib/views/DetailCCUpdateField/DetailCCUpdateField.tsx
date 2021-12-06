@@ -186,6 +186,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 			CTField: activeField,
 			fieldType,
 			preset,
+			parentPreset: activePreset,
 			dynamicFieldSettingsContext: {
 				dynamicField,
 				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) =>

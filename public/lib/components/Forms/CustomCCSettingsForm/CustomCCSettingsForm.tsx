@@ -48,7 +48,7 @@ const CustomCCSettingsForm: FC<CustomCCSetingsFormProps> = ({
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
-										description="Geef het content component een korte en duidelijke naam."
+										description="Geef de content component een korte en duidelijke naam."
 										disabled={disabled}
 										id="data.label"
 										label="Naam"
@@ -69,8 +69,8 @@ const CustomCCSettingsForm: FC<CustomCCSetingsFormProps> = ({
 									name="data.description"
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
-									Geef het content component een duidelijke beschrijving voor in
-									het overzicht.
+									Geef de content component een duidelijke beschrijving. Deze
+									wordt gebruikt in het overzicht.
 								</small>
 							</div>
 						</div>

@@ -87,7 +87,7 @@ export const CUSTOM_CC_DETAIL_TAB_MAP = {
 		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	contentComponents: {
-		name: 'Content Componenten',
+		name: 'Content componenten',
 		target: 'content-componenten',
 		active: false,
 		disabled: false,
