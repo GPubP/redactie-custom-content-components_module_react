@@ -3,6 +3,7 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { PresetDetailFieldModel } from '@redactie/content-types-module';
 import {
 	AlertContainer,
+	alertService,
 	DataLoader,
 	DeletePrompt,
 	LeavePrompt,
@@ -20,7 +21,6 @@ import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '..
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 import { filterCompartments } from '../../helpers';
-import { showCompartmentErrorAlert } from '../../helpers/showAlert';
 import {
 	useActiveField,
 	useCompartments,
@@ -159,7 +159,9 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 			uiFacade.clearActiveField();
 			navigateToDetailCC();
 		} else {
-			showCompartmentErrorAlert({ containerId: ALERT_CONTAINER_IDS.detailCCUpdateField });
+			/* alertService.invalidForm({
+				containerId: ALERT_CONTAINER_IDS.detailCCUpdateField,
+			}); */
 		}
 
 		setHasSubmit(true);
