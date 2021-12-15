@@ -180,9 +180,9 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 			uiFacade.clearActiveField();
 			navigateToDetailCC();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.detailCCNewField,
-			}); */
+			});
 		}
 
 		setHasSubmit(true);

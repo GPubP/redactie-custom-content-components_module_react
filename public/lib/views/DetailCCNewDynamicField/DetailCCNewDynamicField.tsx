@@ -229,9 +229,9 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
 			navigateToDetail();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.detailCCNewDynamicField,
-			}); */
+			});
 		}
 
 		setHasSubmit(true);

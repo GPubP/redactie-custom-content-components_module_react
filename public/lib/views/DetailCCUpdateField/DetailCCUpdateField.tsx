@@ -159,9 +159,9 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 			uiFacade.clearActiveField();
 			navigateToDetailCC();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.detailCCUpdateField,
-			}); */
+			});
 		}
 
 		setHasSubmit(true);

@@ -230,9 +230,9 @@ const DetailCCUpdateDynamicFieldView: FC<DetailRouteProps> = ({
 			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
 			navigateToDetail();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.detailCCUpdateDynamicField,
-			}); */
+			});
 		}
 
 		setHasSubmit(false);
