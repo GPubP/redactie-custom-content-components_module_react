@@ -24,7 +24,10 @@ export const generateFieldFromType = (
 	const config = contentTypesConnector.helpers.generateConfigFromValidationData(
 		validationData,
 		preset,
-		baseConfig
+		baseConfig,
+		preset
+			? contentTypesConnector.helpers.generateFormSchemaFromPreset(preset)
+			: contentTypesConnector.helpers.generateFormSchemaFromFieldTypeData(fieldType.data)
 	);
 
 	return {
