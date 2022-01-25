@@ -226,7 +226,12 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 		}
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
-			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
+			dynamicFieldFacade.addField(
+				omit(['__new'])({
+					...dynamicActiveField,
+					name: kebabCase(dynamicActiveField.label),
+				})
+			);
 			navigateToDetail();
 		} else {
 			alertService.invalidForm({
