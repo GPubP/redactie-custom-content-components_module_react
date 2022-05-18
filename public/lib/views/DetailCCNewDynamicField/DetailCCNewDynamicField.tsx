@@ -19,7 +19,12 @@ import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import {
+	contentTypesConnector,
+	CORE_TRANSLATIONS,
+	languagesConnector,
+	useCoreTranslation,
+} from '../../connectors';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 import { filterCompartments, generateFieldFromType } from '../../helpers';
@@ -71,6 +76,7 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [{ compartments, active: activeCompartment }, register, activate] = useCompartments();
+	const [, languages] = languagesConnector.hooks.useActiveLanguages();
 	const navListItems = compartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
@@ -214,6 +220,7 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 		const compartmentsAreValid = compartmentsFacade.validate(dynamicActiveField, {
 			fieldType: dynamicActiveField?.fieldType,
 			preset,
+			languages: languages || [],
 		});
 
 		// Validate current form to trigger fields error states
@@ -246,6 +253,7 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 		compartmentsFacade.validate(data, {
 			fieldType: dynamicActiveField?.fieldType,
 			preset,
+			languages: languages || [],
 		});
 		dynamicFieldFacade.updateActiveField(data);
 	};
