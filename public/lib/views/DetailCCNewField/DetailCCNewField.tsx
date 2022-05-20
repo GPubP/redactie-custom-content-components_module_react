@@ -244,6 +244,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 					activeCompartmentFormikRef.current = instance;
 				}
 			},
+			activeLanguages: languages || [],
 		};
 
 		return (

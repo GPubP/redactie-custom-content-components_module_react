@@ -276,6 +276,7 @@ const DetailCCNewDynamicFieldView: FC<DetailRouteProps> = ({
 					activeCompartmentFormikRef.current = instance;
 				}
 			},
+			activeLanguages: languages || [],
 		};
 
 		return (
