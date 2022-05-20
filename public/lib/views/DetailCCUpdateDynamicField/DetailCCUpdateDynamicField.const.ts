@@ -22,7 +22,8 @@ export const UPDATE_DYNAMIC_FIELD_COMPARTMENTS: CompartmentModel[] = [
 			contentTypesConnector.helpers.configurationCompartmentValidator(
 				values,
 				meta.fieldType,
-				meta.preset
+				meta.preset,
+				meta.languages
 			),
 	},
 	{

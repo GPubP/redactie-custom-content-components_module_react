@@ -23,7 +23,8 @@ export const UPDATE_FIELD_COMPARTMENTS: CompartmentModel[] = [
 			contentTypesConnector.helpers.configurationCompartmentValidator(
 				values,
 				meta.fieldType,
-				meta.preset
+				meta.preset,
+				meta.languages
 			),
 	},
 	{
