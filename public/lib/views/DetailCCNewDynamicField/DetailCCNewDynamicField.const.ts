@@ -19,10 +19,11 @@ export const NEW_DYNAMIC_FIELD_COMPARTMENTS: CompartmentModel[] = [
 		filter: CtField => !!CtField?.data?.formSchema?.fields?.length,
 		type: CompartmentType.INTERNAL,
 		validate: (values: any, meta: any) =>
-			contentTypesConnector.helpers.configurationCompartmentValidator(
+			(contentTypesConnector.helpers.configurationCompartmentValidator as any)(
 				values,
 				meta.fieldType,
-				meta.preset
+				meta.preset,
+				meta.languages
 			),
 	},
 	{

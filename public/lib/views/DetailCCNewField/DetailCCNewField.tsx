@@ -18,7 +18,12 @@ import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import {
+	contentTypesConnector,
+	CORE_TRANSLATIONS,
+	languagesConnector,
+	useCoreTranslation,
+} from '../../connectors';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 import { filterCompartments, generateFieldFromType } from '../../helpers';
@@ -65,6 +70,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [{ compartments, active: activeCompartment }, register, activate] = useCompartments();
+	const [, languages] = languagesConnector.hooks.useActiveLanguages();
 	const navListItems = useMemo(
 		() =>
 			compartments.map(c => ({
@@ -163,6 +169,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 		const compartmentsAreValid = compartmentsFacade.validate(activeField, {
 			fieldType,
 			preset,
+			languages: languages || [],
 		});
 
 		// Validate current form to trigger fields error states
@@ -192,6 +199,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 		compartmentsFacade.validate(data, {
 			fieldType,
 			preset,
+			languages: languages || [],
 		});
 		uiFacade.updateActiveField(data);
 	};
@@ -236,6 +244,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 					activeCompartmentFormikRef.current = instance;
 				}
 			},
+			activeLanguages: languages || [],
 		};
 
 		return (

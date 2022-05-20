@@ -17,7 +17,12 @@ import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { contentTypesConnector, CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import {
+	contentTypesConnector,
+	CORE_TRANSLATIONS,
+	languagesConnector,
+	useCoreTranslation,
+} from '../../connectors';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../customCC.const';
 import { DetailRouteProps } from '../../customCC.types';
 import { filterCompartments } from '../../helpers';
@@ -61,6 +66,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [{ compartments, active: activeCompartment }, register, activate] = useCompartments();
+	const [, languages] = languagesConnector.hooks.useActiveLanguages();
 	const navListItems = compartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
@@ -126,6 +132,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 		compartmentsFacade.validate(data, {
 			fieldType,
 			preset,
+			languages: languages || [],
 		});
 		uiFacade.updateActiveField(data);
 	};
@@ -217,6 +224,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 					activeCompartmentFormikRef.current = instance;
 				}
 			},
+			activeLanguages: languages || [],
 		};
 
 		return (
