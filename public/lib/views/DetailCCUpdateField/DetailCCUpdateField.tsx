@@ -150,6 +150,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 		const compartmentsAreValid = compartmentsFacade.validate(activeField, {
 			fieldType,
 			preset,
+			languages: languages || [],
 		});
 
 		// Validate current form to trigger fields error states
@@ -225,6 +226,7 @@ const DetailCCUpdateFieldView: FC<DetailRouteProps> = ({ match, preset: activePr
 				}
 			},
 			activeLanguages: languages || [],
+			hasSubmit,
 		};
 
 		return (

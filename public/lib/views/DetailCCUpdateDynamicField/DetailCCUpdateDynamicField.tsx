@@ -266,6 +266,7 @@ const DetailCCUpdateDynamicFieldView: FC<DetailRouteProps> = ({
 				}
 			},
 			activeLanguages: languages || [],
+			hasSubmit,
 		};
 
 		return (

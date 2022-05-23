@@ -142,7 +142,16 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 			const initialValues = {
 				label: queryParams.name || fieldType.data.generalConfig.defaultLabel || '',
 				name: kebabCase(queryParams.name || ''),
-				generalConfig: { guideline: fieldType.data.generalConfig.defaultGuideline || '' },
+				generalConfig: {
+					guideline:
+						preset?.data.generalConfig.defaultGuideline ||
+						fieldType.data.generalConfig.defaultGuideline ||
+						'',
+					multiLanguage:
+						preset?.data.generalConfig.defaultTranslateValue ||
+						fieldType.data.generalConfig.defaultTranslateValue ||
+						false,
+				},
 			};
 
 			uiFacade.setActiveField(
@@ -245,6 +254,7 @@ const DetailCCNewFieldView: FC<DetailRouteProps> = ({ route, match }) => {
 				}
 			},
 			activeLanguages: languages || [],
+			hasSubmit,
 		};
 
 		return (
